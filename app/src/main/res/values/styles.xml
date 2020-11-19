@@ -14,5 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/dark_purple_blue</item>
         <item name="android:textColor">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 </resources>

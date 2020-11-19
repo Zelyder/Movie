@@ -28,17 +28,4 @@
         app:layout_constraintTop_toTopOf="@+id/tvHeader"
         app:srcCompat="@drawable/ic_target" />
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        style="?android:attr/ratingBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="268dp"
-        android:numStars="5"
-        android:rating="4"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
