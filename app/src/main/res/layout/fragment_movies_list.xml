@@ -28,4 +28,13 @@
         app:layout_constraintTop_toTopOf="@+id/tvHeader"
         app:srcCompat="@drawable/ic_target" />
 
+    <include
+        layout="@layout/movie_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHeader" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
