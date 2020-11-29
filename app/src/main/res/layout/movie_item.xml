@@ -13,8 +13,8 @@
         android:background="@drawable/card_bg">
 
         <ImageView
-            android:id="@+id/imgLike"
-            android:layout_width="match_parent"
+            android:id="@+id/imgPoster"
+            android:layout_width="166dp"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             app:layout_constraintEnd_toEndOf="parent"
@@ -104,22 +104,20 @@
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
             android:text="@string/avengers_end_game_item"
-            android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgLike" />
+            app:layout_constraintTop_toBottomOf="@+id/imgPoster" />
 
         <TextView
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
             android:layout_marginBottom="4dp"
             android:text="@string/avengers_time"
             android:textColor="@color/gray"

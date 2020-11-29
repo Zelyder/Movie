@@ -9,6 +9,14 @@ import android.view.ViewGroup
 
 class MoviesDetailsFragment : Fragment() {
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val btnBack: View = view.findViewById(R.id.btnBack)
+        btnBack.setOnClickListener {
+            activity?.onBackPressed()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -16,4 +24,6 @@ class MoviesDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movies_details, container, false)
     }
+
+
 }
