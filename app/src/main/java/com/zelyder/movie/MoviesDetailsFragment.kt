@@ -10,12 +10,12 @@ import android.view.ViewGroup
 
 class MoviesDetailsFragment : Fragment() {
 
-    var backBtnClickListener: OnBackBtnClickListener? = null
+    var navigationClickListener: NavigationClickListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnBackBtnClickListener) {
-            backBtnClickListener = context
+        if (context is NavigationClickListener) {
+            navigationClickListener = context
         }
     }
 
@@ -23,7 +23,6 @@ class MoviesDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_movies_details, container, false)
     }
 
@@ -31,13 +30,13 @@ class MoviesDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val btnBack: View = view.findViewById(R.id.btnBack)
         btnBack.setOnClickListener {
-            backBtnClickListener?.onClickBack()
+            navigationClickListener?.onClickBack()
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        backBtnClickListener = null
+        navigationClickListener = null
     }
 
 
