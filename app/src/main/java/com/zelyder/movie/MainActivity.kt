@@ -7,7 +7,7 @@ import android.os.Bundle
 class MainActivity : AppCompatActivity() {
 
 
-    val FIRST_OPEN_KEY = "isFirstOpen"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -23,14 +23,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(FIRST_OPEN_KEY, isFirstOpen)
+        outState.putBoolean(KEY_FIRST_OPEN, isFirstOpen)
 
 
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        isFirstOpen = savedInstanceState.getBoolean(FIRST_OPEN_KEY)
+        isFirstOpen = savedInstanceState.getBoolean(KEY_FIRST_OPEN)
 
     }
     companion object {
@@ -38,3 +38,5 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
+private const val KEY_FIRST_OPEN = "isFirstOpen"
