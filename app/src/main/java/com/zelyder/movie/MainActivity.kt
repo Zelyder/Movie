@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnBackBtnClickListener{
 
 
 
@@ -18,5 +18,9 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
+    }
+
+    override fun onClickBack() {
+        onBackPressed()
     }
 }
