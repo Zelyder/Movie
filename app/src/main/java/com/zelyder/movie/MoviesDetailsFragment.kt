@@ -28,8 +28,7 @@ class MoviesDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val btnBack: View = view.findViewById(R.id.btnBack)
-        btnBack.setOnClickListener {
+        view.findViewById<View>(R.id.btnBack).setOnClickListener {
             navigationClickListener?.onClickBack()
         }
     }
