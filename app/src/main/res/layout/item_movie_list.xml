@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginBottom="12dp"
     app:cardBackgroundColor="#00FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +14,7 @@
         android:background="@drawable/card_bg">
 
         <ImageView
-            android:id="@+id/imgPoster"
+            android:id="@+id/imgItemPoster"
             android:layout_width="166dp"
             android:layout_height="0dp"
             android:adjustViewBounds="true"
@@ -34,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvRating"
+                android:id="@+id/tvItemAgeRating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -48,16 +49,17 @@
         </FrameLayout>
 
         <ImageView
+            android:id="@+id/ivItemFavorite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="13dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_like" />
+            app:srcCompat="@drawable/ic_like_empty" />
 
         <TextView
-            android:id="@+id/tvGenres"
+            android:id="@+id/tvItemGenres"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
@@ -73,7 +75,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <RatingBar
-            android:id="@+id/ratingBar"
+            android:id="@+id/itemRatingBar"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,12 +84,12 @@
             android:numStars="5"
             android:rating="4"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/tvReviewsCount"
+            app:layout_constraintBottom_toBottomOf="@+id/tvItemReviewsCount"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvGenres" />
+            app:layout_constraintTop_toBottomOf="@+id/tvItemGenres" />
 
         <TextView
-            android:id="@+id/tvReviewsCount"
+            android:id="@+id/tvItemReviewsCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -97,11 +99,11 @@
             android:textColor="@color/gray"
             android:textSize="8sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/ratingBar"
-            app:layout_constraintTop_toBottomOf="@+id/tvGenres" />
+            app:layout_constraintStart_toEndOf="@+id/itemRatingBar"
+            app:layout_constraintTop_toBottomOf="@+id/tvItemGenres" />
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/tvItemTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -111,10 +113,10 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgPoster" />
+            app:layout_constraintTop_toBottomOf="@+id/imgItemPoster" />
 
         <TextView
-            android:id="@+id/tvTime"
+            android:id="@+id/tvItemDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -124,7 +126,7 @@
             android:textSize="8sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/tvItemTitle" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

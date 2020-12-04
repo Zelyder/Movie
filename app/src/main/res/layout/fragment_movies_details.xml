@@ -23,7 +23,7 @@
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/tvReviewsCount"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvGenres" />
+            app:layout_constraintTop_toBottomOf="@+id/tvItemGenres" />
 
         <ImageView
             android:id="@+id/imageHeader"
@@ -64,7 +64,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvRating" />
 
         <TextView
-            android:id="@+id/tvGenres"
+            android:id="@+id/tvItemGenres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -89,7 +89,7 @@
             android:textColor="@color/gray"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/ratingBar"
-            app:layout_constraintTop_toBottomOf="@+id/tvGenres" />
+            app:layout_constraintTop_toBottomOf="@+id/tvItemGenres" />
 
         <TextView
             android:id="@+id/tvStoryline"

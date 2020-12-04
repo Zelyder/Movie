@@ -18,4 +18,6 @@
     <string name="chris_hemsworth">Chris Hemsworth</string>
     <string name="tv_back">Back</string>
     <string name="avengers_time">137 MIN</string>
+    <string name="reviews_count_template">%d Reviews</string>
+    <string name="duration_template">%d MIN</string>
 </resources>
