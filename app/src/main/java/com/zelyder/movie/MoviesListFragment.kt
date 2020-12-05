@@ -31,8 +31,9 @@ class MoviesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.rvMoviesList)
-        recyclerView?.adapter = navigationClickListener?.let { MoviesListAdapter(it) }
         recyclerView?.layoutManager = GridLayoutManager(view.context, 2)
+        recyclerView?.adapter = MoviesListAdapter(navigationClickListener)
+
     }
 
     override fun onStart() {

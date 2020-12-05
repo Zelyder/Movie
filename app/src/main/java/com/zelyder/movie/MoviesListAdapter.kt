@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.w3c.dom.Text
 
-class MoviesListAdapter(private val navigationClickListener: NavigationClickListener) :
+class MoviesListAdapter(private val navigationClickListener: NavigationClickListener?) :
     RecyclerView.Adapter<MoviesViewHolder>() {
 
     private var movies = listOf<Movie>()
@@ -25,7 +25,7 @@ class MoviesListAdapter(private val navigationClickListener: NavigationClickList
         val movie = movies[position]
         holder.bind(movie)
         holder.itemView.setOnClickListener {
-            navigationClickListener.navigateToDetails(movie.id)
+            navigationClickListener?.navigateToDetails(movie.id)
         }
 
     }
