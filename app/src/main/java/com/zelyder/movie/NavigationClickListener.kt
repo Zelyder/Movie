@@ -2,5 +2,5 @@ package com.zelyder.movie
 
 interface NavigationClickListener {
     fun onClickBack()
-    fun navigateToDetails()
+    fun navigateToDetails(id: Int)
 }

@@ -24,9 +24,9 @@ class MainActivity : AppCompatActivity(), NavigationClickListener {
         onBackPressed()
     }
 
-    override fun navigateToDetails() {
+    override fun navigateToDetails(id: Int) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, MoviesDetailsFragment())
+            .replace(R.id.main_container, MoviesDetailsFragment.newInstance(id))
             .addToBackStack("MoviesDetails")
             .commit()
     }

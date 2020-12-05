@@ -22,9 +22,10 @@ class MoviesListAdapter(private val navigationClickListener: NavigationClickList
     }
 
     override fun onBindViewHolder(holder: MoviesViewHolder, position: Int) {
-        holder.bind(movies[position])
+        val movie = movies[position]
+        holder.bind(movie)
         holder.itemView.setOnClickListener {
-            navigationClickListener.navigateToDetails()
+            navigationClickListener.navigateToDetails(movie.id)
         }
 
     }

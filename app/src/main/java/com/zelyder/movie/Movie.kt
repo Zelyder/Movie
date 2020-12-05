@@ -10,4 +10,6 @@ data class Movie(
     val rating: Float,
     val reviewsCount: Int,
     val duration: Int,
+    val bigCoverImg: Int,
+    val Storyline: String,
 )
