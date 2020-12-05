@@ -33,15 +33,18 @@
             app:layout_constraintTop_toTopOf="@+id/tvHeader"
             app:srcCompat="@drawable/ic_target" />
 
-        <include
-            android:id="@+id/avengersItem"
-            layout="@layout/movie_item"
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMoviesList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvHeader" />
+            app:layout_constraintTop_toBottomOf="@+id/tvHeader"
+            app:layout_constraintVertical_bias="1.0"
+            tools:listitem="@layout/item_movie_list" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

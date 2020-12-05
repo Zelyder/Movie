@@ -6,10 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MoviesListFragment : Fragment() {
 
     var navigationClickListener: NavigationClickListener? = null
+    var recyclerView: RecyclerView? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -27,9 +30,16 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val item: View = view.findViewById(R.id.avengersItem)
-        item.setOnClickListener {
-            navigationClickListener?.navigateToDetails()
+        recyclerView = view.findViewById(R.id.rvMoviesList)
+        recyclerView?.layoutManager = GridLayoutManager(view.context, 2)
+        recyclerView?.adapter = MoviesListAdapter(navigationClickListener)
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (recyclerView?.adapter as? MoviesListAdapter)?.apply {
+            bindMovies(MoviesDataSource().getMovies())
         }
     }
 
