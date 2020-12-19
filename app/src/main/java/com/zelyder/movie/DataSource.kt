@@ -1,6 +1,6 @@
 package com.zelyder.movie
 
-class MoviesDataSource {
+class DataSource {
     fun getMovies(): List<Movie> {
         return listOf(
             Movie(
@@ -35,4 +35,32 @@ class MoviesDataSource {
         }
         return null
     }
+    companion object {
+        fun getActors(): List<Actor> {
+            return listOf(
+                Actor(0, R.drawable.robert_downey, "Robert Downey Jr."),
+                Actor(0, R.drawable.chris_evans, "Chris Evans"),
+                Actor(0, R.drawable.mark_ruffalo, "Mark Ruffalo"),
+                Actor(0, R.drawable.chris_hemsworth, "Chris Hemsworth"),
+                Actor(1, R.drawable.john_david_washington, "John David Washington"),
+                Actor(1, R.drawable.robert_pattinson, "Robert Pattinson"),
+                Actor(1, R.drawable.elizabeth_debicki, "Elizabeth Debicki"),
+                Actor(1, R.drawable.kenneth_branagh, "Kenneth Branagh"),
+                Actor(1, R.drawable.dimple_kapadia, "Dimple Kapadia"),
+                Actor(2, R.drawable.scarlett_johansson, "Scarlett Johansson"),
+                Actor(2, R.drawable.florence_pugh, "Florence Pugh"),
+                Actor(2, R.drawable.david_harbour, "David Harbour"),
+                Actor(2, R.drawable.o_t_fagbenle, "O.T. Fagbenle"),
+                Actor(2, R.drawable.rachel_weisz, "Rachel Weisz"),
+                Actor(3, R.drawable.gal_gadot, "Gal Gadot"),
+                Actor(3, R.drawable.chris_pine, "Chris Pine"),
+                Actor(3, R.drawable.kristen_wiig, "Kristen Wiig"),
+                Actor(3, R.drawable.pedro_pascal, "Pedro Pascal")
+            )
+        }
+        fun getActorsByMovieId(id: Int?): List<Actor>{
+            return getActors().filter { it.movieId == id }
+        }
+    }
+
 }

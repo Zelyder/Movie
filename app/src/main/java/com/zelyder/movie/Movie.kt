@@ -5,7 +5,7 @@ data class Movie(
     val title: String,
     val smallCoverImg: Int,
     val ageRating: String,
-    val isFavorite: Boolean,
+    var isFavorite: Boolean,
     val genres: String,
     val rating: Float,
     val reviewsCount: Int,

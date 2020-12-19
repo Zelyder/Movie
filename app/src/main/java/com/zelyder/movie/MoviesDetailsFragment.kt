@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 
 class MoviesDetailsFragment : Fragment() {
@@ -31,7 +33,7 @@ class MoviesDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val movie = arguments?.getInt(KEY_MOVIE_ID)?.let { MoviesDataSource().getMovieById(it) }
+        val movie = arguments?.getInt(KEY_MOVIE_ID)?.let { DataSource().getMovieById(it) }
         val ivBigCoverImg: ImageView = view.findViewById(R.id.imageDetailsPoster)
         val tvStoryline : TextView = view.findViewById(R.id.tvDetailsStorylineContent)
         val tvGenres : TextView = view.findViewById(R.id.tvDetailsGenres)
@@ -39,6 +41,7 @@ class MoviesDetailsFragment : Fragment() {
         val tvReviewsCount : TextView = view.findViewById(R.id.tvDetailsReviewsCount)
         val tvTitle : TextView = view.findViewById(R.id.tvDetailsTitle)
         val ratingBar : RatingBar = view.findViewById(R.id.detailsRatingBar)
+        val rvActors : RecyclerView = view.findViewById(R.id.rvDetailsActors)
 
         if (movie?.bigCoverImg != -1) {
             movie?.bigCoverImg?.let { ivBigCoverImg.setImageResource(it) }
@@ -50,10 +53,11 @@ class MoviesDetailsFragment : Fragment() {
         tvTitle.text = movie?.title
         tvReviewsCount.text = view.context
             .getString(R.string.reviews_count_template, movie?.reviewsCount)
-
         view.findViewById<View>(R.id.btnBack).setOnClickListener {
             navigationClickListener?.onClickBack()
         }
+        rvActors.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
+        rvActors.adapter = ActorsListAdapter().also { it.bindActors(DataSource.getActorsByMovieId(movie?.id)) }
     }
 
     override fun onDetach() {
