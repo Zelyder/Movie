@@ -1,6 +1,7 @@
 package com.zelyder.movie
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ class MoviesListFragment : Fragment() {
 
     var navigationClickListener: NavigationClickListener? = null
     var recyclerView: RecyclerView? = null
+    var columnsCount = PORTRAIT_LIST_COLUMNS_COUNT
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -30,16 +32,24 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView = view.findViewById(R.id.rvMoviesList)
-        recyclerView?.layoutManager = GridLayoutManager(view.context, 2)
-        recyclerView?.adapter = MoviesListAdapter(navigationClickListener)
+
+        columnsCount = when (resources.configuration.orientation){
+            Configuration.ORIENTATION_LANDSCAPE -> LANDSCAPE_LIST_COLUMNS_COUNT
+            Configuration.ORIENTATION_PORTRAIT -> PORTRAIT_LIST_COLUMNS_COUNT
+            else -> PORTRAIT_LIST_COLUMNS_COUNT
+        }
+
+        recyclerView = view.findViewById<RecyclerView>(R.id.rvMoviesList).apply {
+            layoutManager = GridLayoutManager(view.context, columnsCount)
+            adapter = MoviesListAdapter(navigationClickListener)
+        }
 
     }
 
     override fun onStart() {
         super.onStart()
         (recyclerView?.adapter as? MoviesListAdapter)?.apply {
-            bindMovies(MoviesDataSource().getMovies())
+            bindMovies(DataSource().getMovies())
         }
     }
 
@@ -47,6 +57,8 @@ class MoviesListFragment : Fragment() {
         super.onDetach()
         navigationClickListener = null
     }
-
-
 }
+
+private const val PORTRAIT_LIST_COLUMNS_COUNT = 2
+private const val LANDSCAPE_LIST_COLUMNS_COUNT = 3
+private const val ADAPTER_DECORATION_SPACE = 8f

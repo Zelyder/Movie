@@ -66,6 +66,21 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         tvDuration.text = itemView.context
             .getString(R.string.duration_template, movie.duration)
         ratingBar.rating = movie.rating
+
+        ivFavorite.setOnClickListener {
+            ivFavorite.setImageResource(
+                when (movie.isFavorite) {
+                    true -> {
+                        movie.isFavorite = false
+                        R.drawable.ic_like_empty
+                    }
+                    false -> {
+                        movie.isFavorite = true
+                        R.drawable.ic_like_filled
+                    }
+                }
+            )
+        }
     }
 
 }
