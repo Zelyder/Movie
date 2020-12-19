@@ -7,12 +7,12 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
+import com.zelyder.movie.data.Movie
 
 class MoviesListAdapter(private val navigationClickListener: NavigationClickListener?) :
     RecyclerView.Adapter<MoviesViewHolder>() {
 
-    private var movies = listOf<Movie>()
+    private var movies = listOf<MovieLegacy>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
         return MoviesViewHolder(
@@ -32,7 +32,7 @@ class MoviesListAdapter(private val navigationClickListener: NavigationClickList
 
     override fun getItemCount(): Int = movies.size
 
-    fun bindMovies(newMovies: List<Movie>) {
+    fun bindMovies(newMovies: List<MovieLegacy>) {
         movies = newMovies
         notifyDataSetChanged()
     }
@@ -50,32 +50,32 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tvReviewsCount: TextView = itemView.findViewById(R.id.tvItemReviewsCount)
     private val tvDuration: TextView = itemView.findViewById(R.id.tvItemDuration)
 
-    fun bind(movie: Movie) {
-        tvTitle.text = movie.title
-        ivCover.setImageResource(movie.smallCoverImg)
-        tvAgeRating.text = movie.ageRating
+    fun bind(movieLegacy: MovieLegacy) {
+        tvTitle.text = movieLegacy.title
+        ivCover.setImageResource(movieLegacy.smallCoverImg)
+        tvAgeRating.text = movieLegacy.ageRating
         ivFavorite.setImageResource(
-            when (movie.isFavorite) {
+            when (movieLegacy.isFavorite) {
                 true -> R.drawable.ic_like_filled
                 false -> R.drawable.ic_like_empty
             }
         )
-        tvGenres.text = movie.genres
+        tvGenres.text = movieLegacy.genres
         tvReviewsCount.text = itemView.context
-            .getString(R.string.reviews_count_template, movie.reviewsCount)
+            .getString(R.string.reviews_count_template, movieLegacy.reviewsCount)
         tvDuration.text = itemView.context
-            .getString(R.string.duration_template, movie.duration)
-        ratingBar.rating = movie.rating
+            .getString(R.string.duration_template, movieLegacy.duration)
+        ratingBar.rating = movieLegacy.rating
 
         ivFavorite.setOnClickListener {
             ivFavorite.setImageResource(
-                when (movie.isFavorite) {
+                when (movieLegacy.isFavorite) {
                     true -> {
-                        movie.isFavorite = false
+                        movieLegacy.isFavorite = false
                         R.drawable.ic_like_empty
                     }
                     false -> {
-                        movie.isFavorite = true
+                        movieLegacy.isFavorite = true
                         R.drawable.ic_like_filled
                     }
                 }

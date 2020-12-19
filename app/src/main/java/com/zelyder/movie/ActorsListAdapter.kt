@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ActorsListAdapter : RecyclerView.Adapter<ActorsViewHolder>(){
 
-    var actors = listOf<Actor>()
+    var actors = listOf<ActorLegacy>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorsViewHolder {
         return ActorsViewHolder(LayoutInflater.from(parent.context)
@@ -22,7 +22,7 @@ class ActorsListAdapter : RecyclerView.Adapter<ActorsViewHolder>(){
 
     override fun getItemCount(): Int = actors.size
 
-    fun bindActors(newActors: List<Actor>) {
+    fun bindActors(newActors: List<ActorLegacy>) {
         actors = newActors
         notifyDataSetChanged()
     }
@@ -32,8 +32,8 @@ class ActorsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val ivActor : ImageView = itemView.findViewById(R.id.ivActor)
     private val tvActor : TextView = itemView.findViewById(R.id.tvActor)
 
-    fun bind(actor: Actor){
-        ivActor.setImageResource(actor.img)
-        tvActor.text = actor.name
+    fun bind(actorLegacy: ActorLegacy){
+        ivActor.setImageResource(actorLegacy.img)
+        tvActor.text = actorLegacy.name
     }
 }

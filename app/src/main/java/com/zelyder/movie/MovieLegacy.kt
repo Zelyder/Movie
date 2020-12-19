@@ -1,6 +1,6 @@
 package com.zelyder.movie
 
-data class Movie(
+data class MovieLegacy(
     val id: Int,
     val title: String,
     val smallCoverImg: Int,
