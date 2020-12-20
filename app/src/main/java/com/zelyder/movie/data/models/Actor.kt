@@ -1,6 +1,6 @@
-package com.zelyder.movie.data
+package com.zelyder.movie.data.models
 
-data class Actor(
+data class Actor (
     val id: Int,
     val name: String,
     val picture: String

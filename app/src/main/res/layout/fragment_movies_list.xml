@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoviesListFragment">
+    tools:context=".movieslist.MoviesListFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -31,7 +31,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/tvHeader"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvHeader"
-            app:srcCompat="@drawable/ic_target" />
+            app:srcCompat="@drawable/ic_target"
+            tools:ignore="ContentDescription" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMoviesList"

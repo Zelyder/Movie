@@ -1,4 +1,4 @@
-package com.zelyder.movie
+package com.zelyder.movie.movieslist
 
 import android.content.Context
 import android.content.res.Configuration
@@ -9,13 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.zelyder.movie.data.loadMovies
+import com.zelyder.movie.BaseFragment
+import com.zelyder.movie.domain.MoviesDataSourceImpl
+import com.zelyder.movie.NavigationClickListener
+import com.zelyder.movie.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class MoviesListFragment : Fragment() {
+class MoviesListFragment : BaseFragment() {
 
     var navigationClickListener: NavigationClickListener? = null
     var recyclerView: RecyclerView? = null
     var columnsCount = PORTRAIT_LIST_COLUMNS_COUNT
+    val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,10 +55,16 @@ class MoviesListFragment : Fragment() {
 
     }
 
+    private suspend fun setupList() = withContext(Dispatchers.Main){
+        (recyclerView?.adapter as? MoviesListAdapter)?.apply {
+            bindMovies(dataProvider?.dataSource()?.getMoviesAsync() ?: listOf())
+        }
+    }
+
     override fun onStart() {
         super.onStart()
-        (recyclerView?.adapter as? MoviesListAdapter)?.apply {
-            bindMovies(DataSource().getMovies())
+        coroutineScope.launch {
+            setupList()
         }
     }
 

@@ -1,4 +1,4 @@
-package com.zelyder.movie.data
+package com.zelyder.movie.data.models
 
 data class Movie(
     val id: Int,
@@ -11,5 +11,7 @@ data class Movie(
     val minimumAge: Int,
     val runtime: Int,
     val genres: List<Genre>,
-    val actors: List<Actor>
+    val actors: List<Actor>,
+    var isFavorite: Boolean,
+
 )

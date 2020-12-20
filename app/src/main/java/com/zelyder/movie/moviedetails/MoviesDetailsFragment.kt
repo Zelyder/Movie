@@ -1,4 +1,4 @@
-package com.zelyder.movie
+package com.zelyder.movie.moviedetails
 
 import android.content.Context
 import android.os.Bundle
@@ -11,11 +11,22 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import com.zelyder.movie.BaseFragment
+import com.zelyder.movie.domain.MoviesDataSourceImpl
+import com.zelyder.movie.NavigationClickListener
+import com.zelyder.movie.R
+import com.zelyder.movie.data.models.Movie
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-class MoviesDetailsFragment : Fragment() {
+class MoviesDetailsFragment : BaseFragment() {
 
     var navigationClickListener: NavigationClickListener? = null
+    val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -31,9 +42,12 @@ class MoviesDetailsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_movies_details, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val movie = arguments?.getInt(KEY_MOVIE_ID)?.let { DataSource().getMovieById(it) }
+    private suspend fun getMovie(): Movie? = withContext(Dispatchers.IO) {
+        arguments?.getInt(KEY_MOVIE_ID)?.let { dataProvider?.dataSource()?.getMovieByIdAsync(it)  }
+    }
+
+    private suspend fun showMovie(view: View) = withContext(Dispatchers.Main){
+        val movie: Movie? = getMovie()
         val ivBigCoverImg: ImageView = view.findViewById(R.id.imageDetailsPoster)
         val tvStoryline : TextView = view.findViewById(R.id.tvDetailsStorylineContent)
         val tvGenres : TextView = view.findViewById(R.id.tvDetailsGenres)
@@ -43,21 +57,37 @@ class MoviesDetailsFragment : Fragment() {
         val ratingBar : RatingBar = view.findViewById(R.id.detailsRatingBar)
         val rvActors : RecyclerView = view.findViewById(R.id.rvDetailsActors)
 
-        if (movie?.bigCoverImg != -1) {
-            movie?.bigCoverImg?.let { ivBigCoverImg.setImageResource(it) }
+        if (!movie?.backdrop.isNullOrEmpty()) {
+            Picasso.get().load(movie?.backdrop)
+                .into(ivBigCoverImg)
         }
-        movie?.rating?.let { ratingBar.rating = it }
-        tvStoryline.text = movie?.Storyline
-        tvGenres.text = movie?.genres
-        tvAgeRating.text = movie?.ageRating
+        movie?.ratings?.let { ratingBar.rating = it }
+        tvStoryline.text = movie?.overview
+        tvGenres.text = movie?.genres?.joinToString(",") { it.name }
+        tvAgeRating.text = view.context
+            .getString(R.string.minimumAge_template, movie?.minimumAge)
         tvTitle.text = movie?.title
         tvReviewsCount.text = view.context
-            .getString(R.string.reviews_count_template, movie?.reviewsCount)
+            .getString(R.string.reviews_count_template, movie?.numberOfRatings)
         view.findViewById<View>(R.id.btnBack).setOnClickListener {
             navigationClickListener?.onClickBack()
         }
         rvActors.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
-        rvActors.adapter = ActorsListAdapter().also { it.bindActors(DataSource.getActorsByMovieId(movie?.id)) }
+        rvActors.adapter = ActorsListAdapter().also {
+            movie?.actors?.let { it1 ->
+                it.bindActors(
+                    it1
+                )
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        coroutineScope.launch {
+            showMovie(view)
+        }
+
     }
 
     override fun onDetach() {
@@ -66,7 +96,7 @@ class MoviesDetailsFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(id: Int) : MoviesDetailsFragment{
+        fun newInstance(id: Int) : MoviesDetailsFragment {
             val args = Bundle()
             args.putInt(KEY_MOVIE_ID, id)
             val fragment = MoviesDetailsFragment()
