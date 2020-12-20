@@ -2,7 +2,8 @@ package com.zelyder.movie
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
+import com.zelyder.movie.moviedetails.MoviesDetailsFragment
+import com.zelyder.movie.movieslist.MoviesListFragment
 
 
 class MainActivity : AppCompatActivity(), NavigationClickListener {

@@ -1,4 +1,4 @@
-package com.zelyder.movie
+package com.zelyder.movie.movieslist
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,10 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import org.w3c.dom.Text
+import com.squareup.picasso.Picasso
+import com.zelyder.movie.NavigationClickListener
+import com.zelyder.movie.R
+import com.zelyder.movie.data.models.Movie
 
 class MoviesListAdapter(private val navigationClickListener: NavigationClickListener?) :
     RecyclerView.Adapter<MoviesViewHolder>() {
@@ -52,20 +55,22 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(movie: Movie) {
         tvTitle.text = movie.title
-        ivCover.setImageResource(movie.smallCoverImg)
-        tvAgeRating.text = movie.ageRating
+        Picasso.get().load(movie.poster)
+            .into(ivCover)
+        tvAgeRating.text = itemView.context
+            .getString(R.string.minimumAge_template, movie.minimumAge)
         ivFavorite.setImageResource(
             when (movie.isFavorite) {
                 true -> R.drawable.ic_like_filled
                 false -> R.drawable.ic_like_empty
             }
         )
-        tvGenres.text = movie.genres
+        tvGenres.text = movie.genres.joinToString(",") { it.name }
         tvReviewsCount.text = itemView.context
-            .getString(R.string.reviews_count_template, movie.reviewsCount)
+            .getString(R.string.reviews_count_template, movie.numberOfRatings)
         tvDuration.text = itemView.context
-            .getString(R.string.duration_template, movie.duration)
-        ratingBar.rating = movie.rating
+            .getString(R.string.duration_template, movie.runtime)
+        ratingBar.rating = movie.ratings
 
         ivFavorite.setOnClickListener {
             ivFavorite.setImageResource(

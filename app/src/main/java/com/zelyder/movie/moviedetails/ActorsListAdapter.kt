@@ -1,4 +1,4 @@
-package com.zelyder.movie
+package com.zelyder.movie.moviedetails
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import com.zelyder.movie.R
+import com.zelyder.movie.data.models.Actor
 
 class ActorsListAdapter : RecyclerView.Adapter<ActorsViewHolder>(){
 
@@ -33,7 +36,8 @@ class ActorsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tvActor : TextView = itemView.findViewById(R.id.tvActor)
 
     fun bind(actor: Actor){
-        ivActor.setImageResource(actor.img)
+        Picasso.get().load(actor.picture)
+            .into(ivActor)
         tvActor.text = actor.name
     }
 }
