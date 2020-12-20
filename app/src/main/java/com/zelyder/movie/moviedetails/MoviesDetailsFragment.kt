@@ -66,6 +66,8 @@ class MoviesDetailsFragment : BaseFragment() {
         rvActors = view.findViewById(R.id.rvDetailsActors)
         btnBack = view.findViewById(R.id.btnBack)
 
+        rvActors.adapter = ActorsListAdapter()
+
         coroutineScope.launch {
             showMovie(getMovie())
         }
