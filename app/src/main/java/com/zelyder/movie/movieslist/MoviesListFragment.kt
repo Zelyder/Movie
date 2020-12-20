@@ -42,7 +42,7 @@ class MoviesListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        columnsCount = when (resources.configuration.orientation){
+        columnsCount = when (resources.configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> LANDSCAPE_LIST_COLUMNS_COUNT
             Configuration.ORIENTATION_PORTRAIT -> PORTRAIT_LIST_COLUMNS_COUNT
             else -> PORTRAIT_LIST_COLUMNS_COUNT
@@ -55,12 +55,6 @@ class MoviesListFragment : BaseFragment() {
 
     }
 
-    private suspend fun setupList() = withContext(Dispatchers.Main){
-        (recyclerView?.adapter as? MoviesListAdapter)?.apply {
-            bindMovies(dataProvider?.dataSource()?.getMoviesAsync() ?: listOf())
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         coroutineScope.launch {
@@ -71,6 +65,12 @@ class MoviesListFragment : BaseFragment() {
     override fun onDetach() {
         super.onDetach()
         navigationClickListener = null
+    }
+
+    private suspend fun setupList() = withContext(Dispatchers.Main) {
+        (recyclerView?.adapter as? MoviesListAdapter)?.apply {
+            bindMovies(dataProvider?.dataSource()?.getMoviesAsync() ?: listOf())
+        }
     }
 }
 
