@@ -18,6 +18,7 @@ import com.zelyder.movie.domain.MoviesDataSourceImpl
 import com.zelyder.movie.NavigationClickListener
 import com.zelyder.movie.R
 import com.zelyder.movie.data.models.Movie
+import com.zelyder.movie.viewModelFactoryProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +28,8 @@ import kotlinx.coroutines.withContext
 class MoviesDetailsFragment : BaseFragment() {
 
     var navigationClickListener: NavigationClickListener? = null
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val viewModel by lazy { viewModelFactoryProvider()
+        .viewModelFactory().create(MoviesDetailsViewModel::class.java) }
 
     private lateinit var ivBigCoverImg: ImageView
     private lateinit var tvStoryline: TextView
@@ -68,10 +70,15 @@ class MoviesDetailsFragment : BaseFragment() {
 
         rvActors.adapter = ActorsListAdapter()
 
-        coroutineScope.launch {
-            showMovie(getMovie())
-        }
+        viewModel.movie.observe(this.viewLifecycleOwner, {
+            showMovie(it)
+        })
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        arguments?.getInt(KEY_MOVIE_ID)?.let { viewModel.getMovie(it) }
     }
 
     override fun onDetach() {
@@ -79,11 +86,7 @@ class MoviesDetailsFragment : BaseFragment() {
         navigationClickListener = null
     }
 
-    private suspend fun getMovie(): Movie? = withContext(Dispatchers.IO) {
-        arguments?.getInt(KEY_MOVIE_ID)?.let { dataProvider?.dataSource()?.getMovieByIdAsync(it) }
-    }
-
-    private suspend fun showMovie(movie: Movie?) = withContext(Dispatchers.Main) {
+    private fun showMovie(movie: Movie?) {
         if (!movie?.backdrop.isNullOrEmpty()) {
             Picasso.get().load(movie?.backdrop)
                 .into(ivBigCoverImg)
