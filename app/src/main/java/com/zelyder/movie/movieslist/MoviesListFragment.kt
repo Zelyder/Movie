@@ -3,18 +3,12 @@ package com.zelyder.movie.movieslist
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zelyder.movie.*
-import com.zelyder.movie.domain.MoviesDataSourceImpl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MoviesListFragment : BaseFragment() {
 
@@ -61,7 +55,7 @@ class MoviesListFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.setupList()
+        viewModel.updateList()
     }
 
     override fun onDetach() {

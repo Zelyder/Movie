@@ -21,7 +21,7 @@ class MoviesListViewModel(private val dataSource: MoviesDataSource) : ViewModel(
 
     val moviesList: LiveData<List<Movie>> get() = _moviesList
 
-    fun setupList() {
+    fun updateList() {
         viewModelScope.launch(coroutineExceptionHandler) {
             _moviesList.value = dataSource.getMoviesAsync()
         }

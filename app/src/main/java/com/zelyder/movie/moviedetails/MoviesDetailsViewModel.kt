@@ -22,7 +22,7 @@ class MoviesDetailsViewModel(private val dataSource: MoviesDataSource) : ViewMod
 
     val movie : LiveData<Movie> get() = _movie
 
-    fun getMovie(movieId: Int) {
+    fun loadMovie(movieId: Int) {
         viewModelScope.launch(coroutineExceptionHandler) {
             _movie.value = dataSource.getMovieByIdAsync(movieId)
         }

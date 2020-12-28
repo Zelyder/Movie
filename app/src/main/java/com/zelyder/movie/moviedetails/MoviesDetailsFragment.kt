@@ -2,11 +2,9 @@ package com.zelyder.movie.moviedetails
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -14,15 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.zelyder.movie.BaseFragment
-import com.zelyder.movie.domain.MoviesDataSourceImpl
 import com.zelyder.movie.NavigationClickListener
 import com.zelyder.movie.R
 import com.zelyder.movie.data.models.Movie
 import com.zelyder.movie.viewModelFactoryProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class MoviesDetailsFragment : BaseFragment() {
@@ -78,7 +71,7 @@ class MoviesDetailsFragment : BaseFragment() {
 
     override fun onStart() {
         super.onStart()
-        arguments?.getInt(KEY_MOVIE_ID)?.let { viewModel.getMovie(it) }
+        arguments?.getInt(KEY_MOVIE_ID)?.let { viewModel.loadMovie(it) }
     }
 
     override fun onDetach() {
@@ -87,28 +80,27 @@ class MoviesDetailsFragment : BaseFragment() {
     }
 
     private fun showMovie(movie: Movie?) {
-        if (!movie?.backdrop.isNullOrEmpty()) {
-            Picasso.get().load(movie?.backdrop)
-                .into(ivBigCoverImg)
-        }
-        movie?.ratings?.let { ratingBar.rating = it }
-        tvStoryline.text = movie?.overview
-        tvGenres.text = movie?.genres?.joinToString(",") { it.name }
-        tvAgeRating.text = requireContext()
-            .getString(R.string.minimumAge_template, movie?.minimumAge)
-        tvTitle.text = movie?.title
-        tvReviewsCount.text = requireContext()
-            .getString(R.string.reviews_count_template, movie?.numberOfRatings)
-        btnBack.setOnClickListener {
-            navigationClickListener?.onClickBack()
-        }
-        rvActors.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        rvActors.adapter = ActorsListAdapter().also {
-            movie?.actors?.let { it1 ->
-                it.bindActors(
-                    it1
-                )
+
+        movie?.let {_movie ->
+            if (movie.backdrop.isNotEmpty()) {
+                Picasso.get().load(movie.backdrop)
+                    .into(ivBigCoverImg)
+            }
+            ratingBar.rating = _movie.ratings
+            tvStoryline.text = _movie.overview
+            tvGenres.text = _movie.genres.joinToString(",") { it.name }
+            tvAgeRating.text = requireContext()
+                .getString(R.string.minimumAge_template, _movie.minimumAge)
+            tvTitle.text = _movie.title
+            tvReviewsCount.text = requireContext()
+                .getString(R.string.reviews_count_template, _movie.numberOfRatings)
+            btnBack.setOnClickListener {
+                navigationClickListener?.onClickBack()
+            }
+            rvActors.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            rvActors.adapter = ActorsListAdapter().also {
+                    it.bindActors(_movie.actors)
             }
         }
     }
