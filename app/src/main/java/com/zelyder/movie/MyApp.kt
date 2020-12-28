@@ -1,18 +1,22 @@
 package com.zelyder.movie
 
 import android.app.Application
-import com.zelyder.movie.domain.DataProvider
-import com.zelyder.movie.domain.MoviesDataSource
+import android.content.Context
+import androidx.fragment.app.Fragment
 import com.zelyder.movie.domain.MoviesDataSourceImpl
 
-class MyApp: Application(), DataProvider {
+class MyApp: Application(), ViewModelFactoryProvider {
 
-    private lateinit var moviesDataSource: MoviesDataSource
+    private lateinit var viewModelFactory: ViewModelFactory
 
     override fun onCreate() {
         super.onCreate()
-        moviesDataSource = MoviesDataSourceImpl(applicationContext)
+        viewModelFactory = ViewModelFactory(MoviesDataSourceImpl(applicationContext))
     }
 
-    override fun dataSource(): MoviesDataSource = moviesDataSource
+    override fun viewModelFactory(): ViewModelFactory = viewModelFactory
 }
+
+fun Context.viewModelFactoryProvider() = (applicationContext as MyApp)
+
+fun Fragment.viewModelFactoryProvider() = requireContext().viewModelFactoryProvider()

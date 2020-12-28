@@ -3,27 +3,20 @@ package com.zelyder.movie.movieslist
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.zelyder.movie.BaseFragment
-import com.zelyder.movie.domain.MoviesDataSourceImpl
-import com.zelyder.movie.NavigationClickListener
-import com.zelyder.movie.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.zelyder.movie.*
 
 class MoviesListFragment : BaseFragment() {
 
     var navigationClickListener: NavigationClickListener? = null
     var recyclerView: RecyclerView? = null
     var columnsCount = PORTRAIT_LIST_COLUMNS_COUNT
-    val coroutineScope = CoroutineScope(Dispatchers.Main)
+    val viewModel: MoviesListViewModel by lazy { viewModelFactoryProvider()
+        .viewModelFactory().create(MoviesListViewModel::class.java) }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,24 +46,21 @@ class MoviesListFragment : BaseFragment() {
             adapter = MoviesListAdapter(navigationClickListener)
         }
 
+        viewModel.moviesList.observe(this.viewLifecycleOwner, {
+            (recyclerView?.adapter as? MoviesListAdapter)?.apply {
+                bindMovies(it)
+            }
+        })
     }
 
     override fun onStart() {
         super.onStart()
-        coroutineScope.launch {
-            setupList()
-        }
+        viewModel.updateList()
     }
 
     override fun onDetach() {
         super.onDetach()
         navigationClickListener = null
-    }
-
-    private suspend fun setupList() = withContext(Dispatchers.Main) {
-        (recyclerView?.adapter as? MoviesListAdapter)?.apply {
-            bindMovies(dataProvider?.dataSource()?.getMoviesAsync() ?: listOf())
-        }
     }
 }
 
