@@ -37,6 +37,7 @@ class ActorsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(actor: Actor){
         Picasso.get().load(actor.picture)
+            .placeholder(R.drawable.ic_person_circle)
             .into(ivActor)
         tvActor.text = actor.name
     }

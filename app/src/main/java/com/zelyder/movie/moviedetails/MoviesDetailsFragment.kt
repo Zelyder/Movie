@@ -88,7 +88,7 @@ class MoviesDetailsFragment : BaseFragment() {
             }
             ratingBar.rating = _movie.ratings
             tvStoryline.text = _movie.overview
-            tvGenres.text = _movie.genres.joinToString(",") { it.name }
+            tvGenres.text = _movie.genres.joinToString(", ") { it.name }
             tvAgeRating.text = requireContext()
                 .getString(R.string.minimumAge_template, _movie.minimumAge)
             tvTitle.text = _movie.title
