@@ -60,6 +60,7 @@ class MoviesListFragment : BaseFragment() {
 
     override fun onDetach() {
         super.onDetach()
+        recyclerView = null
         navigationClickListener = null
     }
 }

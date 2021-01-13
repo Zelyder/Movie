@@ -74,10 +74,12 @@ class MoviesDetailsFragment : BaseFragment() {
         arguments?.getInt(KEY_MOVIE_ID)?.let { viewModel.loadMovie(it) }
     }
 
-    override fun onDetach() {
-        super.onDetach()
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         navigationClickListener = null
     }
+
 
     private fun showMovie(movie: Movie?) {
 
