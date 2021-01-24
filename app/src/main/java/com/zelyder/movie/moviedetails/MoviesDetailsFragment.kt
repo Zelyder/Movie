@@ -74,10 +74,12 @@ class MoviesDetailsFragment : BaseFragment() {
         arguments?.getInt(KEY_MOVIE_ID)?.let { viewModel.loadMovie(it) }
     }
 
-    override fun onDetach() {
-        super.onDetach()
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         navigationClickListener = null
     }
+
 
     private fun showMovie(movie: Movie?) {
 
@@ -88,7 +90,7 @@ class MoviesDetailsFragment : BaseFragment() {
             }
             ratingBar.rating = _movie.ratings
             tvStoryline.text = _movie.overview
-            tvGenres.text = _movie.genres.joinToString(",") { it.name }
+            tvGenres.text = _movie.genres.joinToString(", ") { it.name }
             tvAgeRating.text = requireContext()
                 .getString(R.string.minimumAge_template, _movie.minimumAge)
             tvTitle.text = _movie.title

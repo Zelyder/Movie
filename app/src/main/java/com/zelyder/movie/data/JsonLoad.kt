@@ -1,116 +1,84 @@
 package com.zelyder.movie.data
 
-import android.content.Context
+import com.zelyder.movie.BuildConfig
 import com.zelyder.movie.data.models.Actor
 import com.zelyder.movie.data.models.Genre
 import com.zelyder.movie.data.models.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.zelyder.movie.api.MovieApi
+import com.zelyder.movie.api.JsonMovie
+import kotlinx.serialization.ExperimentalSerializationApi
+import okhttp3.MediaType.Companion.toMediaType
+import retrofit2.Retrofit
+import retrofit2.create
 
 
-private val jsonFormat = Json { ignoreUnknownKeys = true }
-
-@Serializable
-private class JsonGenre(val id: Int, val name: String)
-
-@Serializable
-private class JsonActor(
-    val id: Int,
-    val name: String,
-    @SerialName("profile_path")
-    val profilePicture: String
-)
+private val jsonFormat = Json {
+    ignoreUnknownKeys = true }
 
 @Serializable
-private class JsonMovie(
-    val id: Int,
-    val title: String,
-    @SerialName("poster_path")
-    val posterPicture: String,
-    @SerialName("backdrop_path")
-    val backdropPicture: String,
-    val runtime: Int,
-    @SerialName("genre_ids")
-    val genreIds: List<Int>,
-    val actors: List<Int>,
-    @SerialName("vote_average")
-    val ratings: Float,
-    @SerialName("vote_count")
-    val votesCount: Int,
-    val overview: String,
-    val adult: Boolean
-)
+class JsonGenre(val id: Int, val name: String)
 
-private suspend fun loadGenres(context: Context): List<Genre> = withContext(Dispatchers.IO) {
-    val data = readAssetFileToString(context, "genres.json")
-    parseGenres(data)
+private suspend fun loadGenres(): List<Genre> = withContext(Dispatchers.IO) {
+    val jsonGenres = RetrofitModule.movieApi.getGenres().genres
+    jsonGenres.map { Genre(id = it.id, name = it.name) }
 }
 
-internal fun parseGenres(data: String): List<Genre> {
-    val jsonGenres = jsonFormat.decodeFromString<List<JsonGenre>>(data)
-    return jsonGenres.map { Genre(id = it.id, name = it.name) }
+private suspend fun loadActors(movieId: Int): List<Actor> = withContext(Dispatchers.IO) {
+    val jsonActors = RetrofitModule.movieApi.getCredits(movieId).cast
+    jsonActors.map { Actor(id = it.id, name = it.name,
+        picture = BuildConfig.BASE_IMAGE_URL + "w342/"+ it.profilePicture) }
 }
 
-private fun readAssetFileToString(context: Context, fileName: String): String {
-    val stream = context.assets.open(fileName)
-    return stream.bufferedReader().readText()
-}
-
-private suspend fun loadActors(context: Context): List<Actor> = withContext(Dispatchers.IO) {
-    val data = readAssetFileToString(context, "people.json")
-    parseActors(data)
-}
 private fun normalizedRating(rating: Float?): Float {
     return (rating ?: 1f) / 2
 }
 
-internal fun parseActors(data: String): List<Actor> {
-    val jsonActors = jsonFormat.decodeFromString<List<JsonActor>>(data)
-    return jsonActors.map { Actor(id = it.id, name = it.name, picture = it.profilePicture) }
-}
-
 @Suppress("unused")
-internal suspend fun loadMovies(context: Context): List<Movie> = withContext(Dispatchers.IO) {
-    val genresMap = loadGenres(context)
-    val actorsMap = loadActors(context)
+internal suspend fun loadMovies(): List<Movie> = withContext(Dispatchers.IO) {
+    val genresMap = loadGenres()
+    val data = RetrofitModule.movieApi.getPopularMovies().popularMovies
 
-    val data = readAssetFileToString(context, "data.json")
-    parseMovies(data, genresMap, actorsMap)
+    parseMovies(data, genresMap)
 }
 
-internal fun parseMovies(
-    data: String,
-    genres: List<Genre>,
-    actors: List<Actor>
-): List<Movie> {
+private object RetrofitModule {
+    @ExperimentalSerializationApi
+    private val retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl(BuildConfig.BASE_URL)
+        .addConverterFactory(jsonFormat.asConverterFactory("application/json".toMediaType()))
+        .build()
+
+    val movieApi: MovieApi = retrofit.create()
+}
+
+internal suspend fun parseMovies(
+    jsonMovies: List<JsonMovie>,
+    genres: List<Genre>
+): List<Movie> = withContext(Dispatchers.IO) {
     val genresMap = genres.associateBy { it.id }
-    val actorsMap = actors.associateBy { it.id }
 
-    val jsonMovies = jsonFormat.decodeFromString<List<JsonMovie>>(data)
-
-    return jsonMovies.map { jsonMovie ->
+    jsonMovies.map { jsonMovie ->
         @Suppress("unused")
         (Movie(
-        id = jsonMovie.id,
-        title = jsonMovie.title,
-        overview = jsonMovie.overview,
-        poster = jsonMovie.posterPicture,
-        backdrop = jsonMovie.backdropPicture,
-        ratings = normalizedRating(jsonMovie.ratings),
-        numberOfRatings = jsonMovie.votesCount,
-        minimumAge = if (jsonMovie.adult) 16 else 13,
-        runtime = jsonMovie.runtime,
-        genres = jsonMovie.genreIds.map {
-            genresMap[it] ?: throw IllegalArgumentException("Genre not found")
-        },
-        actors = jsonMovie.actors.map {
-            actorsMap[it] ?: throw IllegalArgumentException("Actor not found")
-        },
+            id = jsonMovie.id,
+            title = jsonMovie.title,
+            overview = jsonMovie.overview,
+            poster = BuildConfig.BASE_IMAGE_URL + "w342/" + jsonMovie.posterPicture,
+            backdrop = BuildConfig.BASE_IMAGE_URL + "w342/" + jsonMovie.backdropPicture,
+            ratings = normalizedRating(jsonMovie.ratings),
+            numberOfRatings = jsonMovie.votesCount,
+            minimumAge = if (jsonMovie.adult) 16 else 13,
+            runtime = 0,
+            genres = jsonMovie.genreIds.map {
+                genresMap[it] ?: throw IllegalArgumentException("Genre not found")
+            },
+            actors = loadActors(jsonMovie.id),
             isFavorite = false
-    ))
+        ))
     }
 }
