@@ -1,4 +1,4 @@
-package com.zelyder.movie.movieslist
+package com.zelyder.movie.presentation.movieslist
 
 import android.content.Context
 import android.content.res.Configuration
@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zelyder.movie.*
+import com.zelyder.movie.presentation.core.NavigationClickListener
+import com.zelyder.movie.presentation.core.BaseFragment
 
 class MoviesListFragment : BaseFragment() {
 

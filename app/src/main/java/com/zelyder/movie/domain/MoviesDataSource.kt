@@ -1,6 +1,6 @@
 package com.zelyder.movie.domain
 
-import com.zelyder.movie.data.models.Movie
+import com.zelyder.movie.domain.models.Movie
 
 interface MoviesDataSource {
     suspend fun getMoviesAsync(): List<Movie>

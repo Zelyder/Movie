@@ -1,4 +1,4 @@
-package com.zelyder.movie
+package com.zelyder.movie.presentation.core
 
 import android.content.Context
 import androidx.fragment.app.Fragment

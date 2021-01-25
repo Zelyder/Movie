@@ -1,10 +1,10 @@
-package com.zelyder.movie
+package com.zelyder.movie.presentation.core
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.zelyder.movie.domain.MoviesDataSource
-import com.zelyder.movie.moviedetails.MoviesDetailsViewModel
-import com.zelyder.movie.movieslist.MoviesListViewModel
+import com.zelyder.movie.presentation.moviedetails.MoviesDetailsViewModel
+import com.zelyder.movie.presentation.movieslist.MoviesListViewModel
 import java.lang.IllegalArgumentException
 
 @Suppress("UNCHECKED_CAST")

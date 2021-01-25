@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.zelyder.movie.domain.MoviesDataSourceImpl
+import com.zelyder.movie.presentation.core.ViewModelFactory
+import com.zelyder.movie.presentation.core.ViewModelFactoryProvider
 
 class MyApp: Application(), ViewModelFactoryProvider {
 

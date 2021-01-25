@@ -1,9 +1,11 @@
-package com.zelyder.movie
+package com.zelyder.movie.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.zelyder.movie.moviedetails.MoviesDetailsFragment
-import com.zelyder.movie.movieslist.MoviesListFragment
+import com.zelyder.movie.R
+import com.zelyder.movie.presentation.core.NavigationClickListener
+import com.zelyder.movie.presentation.moviedetails.MoviesDetailsFragment
+import com.zelyder.movie.presentation.movieslist.MoviesListFragment
 
 
 class MainActivity : AppCompatActivity(), NavigationClickListener {

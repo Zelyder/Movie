@@ -1,4 +1,4 @@
-package com.zelyder.movie.moviedetails
+package com.zelyder.movie.presentation.moviedetails
 
 import android.content.Context
 import android.os.Bundle
@@ -11,10 +11,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import com.zelyder.movie.BaseFragment
-import com.zelyder.movie.NavigationClickListener
+import com.zelyder.movie.presentation.core.BaseFragment
+import com.zelyder.movie.presentation.core.NavigationClickListener
 import com.zelyder.movie.R
-import com.zelyder.movie.data.models.Movie
+import com.zelyder.movie.domain.models.Movie
 import com.zelyder.movie.viewModelFactoryProvider
 
 

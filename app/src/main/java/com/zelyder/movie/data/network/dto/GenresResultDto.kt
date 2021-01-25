@@ -1,12 +1,11 @@
-package com.zelyder.movie.api
+package com.zelyder.movie.data.network.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import com.zelyder.movie.data.JsonGenre
 
 
 @Serializable
-class GenresResponse (
+class GenresResultDto (
     @SerialName("genres")
-    val genres: List<JsonGenre>
+    val genres: List<GenreDto> = emptyList()
 )

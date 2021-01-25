@@ -1,16 +1,14 @@
-package com.zelyder.movie.movieslist
+package com.zelyder.movie.presentation.movieslist
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zelyder.movie.data.models.Movie
+import com.zelyder.movie.domain.models.Movie
 import com.zelyder.movie.domain.MoviesDataSource
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MoviesListViewModel(private val dataSource: MoviesDataSource) : ViewModel() {
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->

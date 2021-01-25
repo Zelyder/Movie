@@ -1,8 +1,8 @@
 package com.zelyder.movie.domain
 
 import android.content.Context
-import com.zelyder.movie.data.loadMovies
-import com.zelyder.movie.data.models.Movie
+import com.zelyder.movie.data.network.loadMovies
+import com.zelyder.movie.domain.models.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

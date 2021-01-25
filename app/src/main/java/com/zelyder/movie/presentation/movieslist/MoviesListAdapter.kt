@@ -1,4 +1,4 @@
-package com.zelyder.movie.movieslist
+package com.zelyder.movie.presentation.movieslist
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +8,9 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import com.zelyder.movie.NavigationClickListener
+import com.zelyder.movie.presentation.core.NavigationClickListener
 import com.zelyder.movie.R
-import com.zelyder.movie.data.models.Movie
+import com.zelyder.movie.domain.models.Movie
 
 class MoviesListAdapter(private val navigationClickListener: NavigationClickListener?) :
     RecyclerView.Adapter<MoviesViewHolder>() {
@@ -51,7 +51,7 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tvGenres: TextView = itemView.findViewById(R.id.tvItemGenres)
     private val ratingBar: RatingBar = itemView.findViewById(R.id.itemRatingBar)
     private val tvReviewsCount: TextView = itemView.findViewById(R.id.tvItemReviewsCount)
-    private val tvDuration: TextView = itemView.findViewById(R.id.tvItemDuration)
+    private val tvReleaseDate: TextView = itemView.findViewById(R.id.tvItemReleaseDate)
 
     fun bind(movie: Movie) {
         tvTitle.text = movie.title
@@ -68,8 +68,7 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         tvGenres.text = movie.genres.joinToString(",") { it.name }
         tvReviewsCount.text = itemView.context
             .getString(R.string.reviews_count_template, movie.numberOfRatings)
-        tvDuration.text = itemView.context
-            .getString(R.string.duration_template, movie.runtime)
+        tvReleaseDate.text = movie.releaseDate
         ratingBar.rating = movie.ratings
 
         ivFavorite.setOnClickListener {

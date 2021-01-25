@@ -1,4 +1,4 @@
-package com.zelyder.movie
+package com.zelyder.movie.presentation.core
 
 interface NavigationClickListener {
     fun onClickBack()
