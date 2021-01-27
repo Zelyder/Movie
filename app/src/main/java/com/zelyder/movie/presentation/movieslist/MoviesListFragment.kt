@@ -17,7 +17,7 @@ class MoviesListFragment : BaseFragment() {
     var navigationClickListener: NavigationClickListener? = null
     var recyclerView: RecyclerView? = null
     var columnsCount = PORTRAIT_LIST_COLUMNS_COUNT
-    val viewModel: MoviesListViewModel by lazy { viewModelFactoryProvider()
+    private val viewModel: MoviesListViewModel by lazy { viewModelFactoryProvider()
         .viewModelFactory().create(MoviesListViewModel::class.java) }
 
     override fun onAttach(context: Context) {
@@ -69,4 +69,3 @@ class MoviesListFragment : BaseFragment() {
 
 private const val PORTRAIT_LIST_COLUMNS_COUNT = 2
 private const val LANDSCAPE_LIST_COLUMNS_COUNT = 3
-private const val ADAPTER_DECORATION_SPACE = 8f

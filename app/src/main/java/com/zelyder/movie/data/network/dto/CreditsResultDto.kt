@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CreditsResultDto(
     @SerialName("id")
-    val id: Int,
+    val id: Int = 0,
     @SerialName("cast")
-    val cast: List<CastDto>
+    val cast: List<CastDto> = emptyList()
 )
 
 

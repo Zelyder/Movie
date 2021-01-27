@@ -9,7 +9,7 @@ data class MoviesResultDto (
 	@SerialName("page")
 	val page: Long = 1,
 	@SerialName("results")
-	val popularMovies: List<MovieDto> = emptyList(),
+	val popularMovies: List<ListMovieDto> = emptyList(),
 
 	@SerialName("total_pages")
 	val totalPages: Long = 0,

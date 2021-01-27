@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.zelyder.movie.presentation.core.NavigationClickListener
 import com.zelyder.movie.R
-import com.zelyder.movie.domain.models.Movie
+import com.zelyder.movie.domain.models.DetailsMovie
+import com.zelyder.movie.domain.models.ListMovie
 
 class MoviesListAdapter(private val navigationClickListener: NavigationClickListener?) :
     RecyclerView.Adapter<MoviesViewHolder>() {
 
-    private var movies = listOf<Movie>()
+    private var movies = listOf<ListMovie>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesViewHolder {
         return MoviesViewHolder(
@@ -35,7 +36,7 @@ class MoviesListAdapter(private val navigationClickListener: NavigationClickList
 
     override fun getItemCount(): Int = movies.size
 
-    fun bindMovies(newMovies: List<Movie>) {
+    fun bindMovies(newMovies: List<ListMovie>) {
         movies = newMovies
         notifyDataSetChanged()
     }
@@ -53,19 +54,18 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tvReviewsCount: TextView = itemView.findViewById(R.id.tvItemReviewsCount)
     private val tvReleaseDate: TextView = itemView.findViewById(R.id.tvItemReleaseDate)
 
-    fun bind(movie: Movie) {
+    fun bind(movie: ListMovie) {
         tvTitle.text = movie.title
         Picasso.get().load(movie.poster)
             .into(ivCover)
-        tvAgeRating.text = itemView.context
-            .getString(R.string.minimumAge_template, movie.minimumAge)
+        tvAgeRating.text = movie.minimumAge
         ivFavorite.setImageResource(
             when (movie.isFavorite) {
                 true -> R.drawable.ic_like_filled
                 false -> R.drawable.ic_like_empty
             }
         )
-        tvGenres.text = movie.genres.joinToString(",") { it.name }
+        tvGenres.text = movie.genres
         tvReviewsCount.text = itemView.context
             .getString(R.string.reviews_count_template, movie.numberOfRatings)
         tvReleaseDate.text = movie.releaseDate

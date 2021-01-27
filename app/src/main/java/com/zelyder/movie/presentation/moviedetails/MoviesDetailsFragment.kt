@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso
 import com.zelyder.movie.presentation.core.BaseFragment
 import com.zelyder.movie.presentation.core.NavigationClickListener
 import com.zelyder.movie.R
-import com.zelyder.movie.domain.models.Movie
+import com.zelyder.movie.domain.models.DetailsMovie
 import com.zelyder.movie.viewModelFactoryProvider
 
 
@@ -81,7 +81,7 @@ class MoviesDetailsFragment : BaseFragment() {
     }
 
 
-    private fun showMovie(movie: Movie?) {
+    private fun showMovie(movie: DetailsMovie?) {
 
         movie?.let {_movie ->
             if (movie.backdrop.isNotEmpty()) {
@@ -90,9 +90,8 @@ class MoviesDetailsFragment : BaseFragment() {
             }
             ratingBar.rating = _movie.ratings
             tvStoryline.text = _movie.overview
-            tvGenres.text = _movie.genres.joinToString(", ") { it.name }
-            tvAgeRating.text = requireContext()
-                .getString(R.string.minimumAge_template, _movie.minimumAge)
+            tvGenres.text = _movie.genres
+            tvAgeRating.text = movie.minimumAge
             tvTitle.text = _movie.title
             tvReviewsCount.text = requireContext()
                 .getString(R.string.reviews_count_template, _movie.numberOfRatings)
