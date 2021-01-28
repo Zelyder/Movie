@@ -39,12 +39,12 @@ class MoviesListAdapter(
                 when (movie.isFavorite) {
                     true -> {
                         movie.isFavorite = false
-                        itemClickListener?.onClickLike(movie)
+                        itemClickListener?.onClickLike(movie.id, movie.isFavorite)
                         R.drawable.ic_like_empty
                     }
                     false -> {
                         movie.isFavorite = true
-                        itemClickListener?.onClickLike(movie)
+                        itemClickListener?.onClickLike(movie.id, movie.isFavorite)
                         R.drawable.ic_like_filled
                     }
                 }

@@ -30,7 +30,7 @@ class MovieDetailsRepositoryImpl(
 
             if (forceRefresh || movies.backdrop.isEmpty()) {
                 movies = remoteDataSource.getMovieByIdAsync(movieId)
-                    .toDetailsMovie(actors, imagesBaseUrl)
+                    .toDetailsMovie(actors, imagesBaseUrl, movies.isFavorite)
                 localDataSource.updateMovie(movies.toMovieEntity().movie)
             }
 

@@ -23,6 +23,9 @@ interface MoviesDao {
     @Update
     suspend fun updateMovie(movie: MovieEntity)
 
+    @Query("UPDATE ${DbContract.Movies.TABLE_NAME} SET ${DbContract.Movies.COLUMN_NAME_FAVORITE} = :isFavorite WHERE ${DbContract.Movies.COLUMN_NAME_ID} == :id")
+    suspend fun updateIsFavoriteById(id: Int, isFavorite: Boolean)
+
     @Query("DELETE FROM ${DbContract.Movies.TABLE_NAME} WHERE ${DbContract.Movies.COLUMN_NAME_ID} == :id")
     suspend fun deleteMovieById(id: Int)
 

@@ -104,7 +104,8 @@ fun DetailsMovie.toMovieEntity(): MovieWithActors = MovieWithActors(
 
 fun DetailsMovieDto.toDetailsMovie(
     actors: List<Actor>,
-    imagesBaseUrl: String
+    imagesBaseUrl: String,
+    isFavorite: Boolean
 ): DetailsMovie = DetailsMovie(
     id = this.id,
     title = this.title,
@@ -117,7 +118,8 @@ fun DetailsMovieDto.toDetailsMovie(
     runtime = this.duration,
     releaseDate = this.releaseDate,
     genres = toGenresAsString(this),
-    actors = actors
+    actors = actors,
+    isFavorite = isFavorite
 )
 
 

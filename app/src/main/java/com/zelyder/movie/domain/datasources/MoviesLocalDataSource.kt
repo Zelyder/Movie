@@ -17,6 +17,7 @@ interface MoviesLocalDataSource {
     suspend fun saveMovies(movies: List<MovieEntity>)
     suspend fun saveMovie(movie: MovieEntity)
     suspend fun updateMovie(movie: MovieEntity)
+    suspend fun updateMovieIsFavorite(id: Int, isFavorite: Boolean)
     suspend fun saveGenres(genres: List<GenreEntity>)
     suspend fun saveActors(actors: List<ActorEntity>)
 }

@@ -39,7 +39,7 @@ class MoviesListRepositoryImpl(
             movies
         }
 
-    override suspend fun updateMovieAsync(movie: ListMovie) = withContext(Dispatchers.IO){
-        localDataSource.updateMovie(movie.toMovieEntity())
+    override suspend fun updateMovieIsFavoriteAsync(movieId: Int, isFavorite: Boolean) = withContext(Dispatchers.IO){
+        localDataSource.updateMovieIsFavorite(movieId, isFavorite)
     }
 }

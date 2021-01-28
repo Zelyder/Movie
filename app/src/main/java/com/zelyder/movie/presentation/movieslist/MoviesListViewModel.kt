@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zelyder.movie.domain.models.DetailsMovie
-import com.zelyder.movie.domain.datasources.MoviesRemoteDataSource
 import com.zelyder.movie.domain.models.ListMovie
 import com.zelyder.movie.domain.repositories.MoviesListRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -27,9 +25,9 @@ class MoviesListViewModel(private val moviesListRepository: MoviesListRepository
         }
     }
 
-    fun updateMovie(movie: ListMovie){
+    fun updateMovie(movieId: Int, isFavorite: Boolean){
         viewModelScope.launch(coroutineExceptionHandler)  {
-            moviesListRepository.updateMovieAsync(movie)
+            moviesListRepository.updateMovieIsFavoriteAsync(movieId, isFavorite)
         }
     }
 

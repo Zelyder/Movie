@@ -4,5 +4,5 @@ import com.zelyder.movie.domain.models.ListMovie
 
 interface MoviesListRepository {
     suspend fun getMoviesAsync(forceRefresh: Boolean = false): List<ListMovie>
-    suspend fun updateMovieAsync(movie: ListMovie)
+    suspend fun updateMovieIsFavoriteAsync(movieId: Int, isFavorite: Boolean)
 }

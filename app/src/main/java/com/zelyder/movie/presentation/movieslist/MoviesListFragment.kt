@@ -74,8 +74,8 @@ class MoviesListFragment : BaseFragment(), MovieListItemClickListener {
         super.onDetach()
     }
 
-    override fun onClickLike(movie: ListMovie) {
-        viewModel.updateMovie(movie)
+    override fun onClickLike(movieId: Int, isFavorite: Boolean) {
+        viewModel.updateMovie(movieId, isFavorite)
     }
 }
 

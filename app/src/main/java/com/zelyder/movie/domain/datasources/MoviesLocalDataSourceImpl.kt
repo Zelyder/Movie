@@ -37,6 +37,10 @@ class MoviesLocalDataSourceImpl(private val moviesDb: MoviesDb): MoviesLocalData
         moviesDb.moviesDao().updateMovie(movie)
     }
 
+    override suspend fun updateMovieIsFavorite(id: Int, isFavorite: Boolean) {
+        moviesDb.moviesDao().updateIsFavoriteById(id, isFavorite)
+    }
+
     override suspend fun saveGenres(genres: List<GenreEntity>) = withContext(Dispatchers.IO){
         moviesDb.genresDao().addAllGenres(genres)
     }
