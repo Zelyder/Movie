@@ -4,10 +4,32 @@ import com.zelyder.movie.data.network.dto.CastDto
 import com.zelyder.movie.data.network.dto.DetailsMovieDto
 import com.zelyder.movie.data.network.dto.GenreDto
 import com.zelyder.movie.data.network.dto.ListMovieDto
+import com.zelyder.movie.data.storage.entities.ActorEntity
+import com.zelyder.movie.data.storage.entities.GenreEntity
+import com.zelyder.movie.data.storage.entities.MovieEntity
+import com.zelyder.movie.data.storage.entities.MovieWithActors
 import com.zelyder.movie.domain.models.Actor
 import com.zelyder.movie.domain.models.DetailsMovie
 import com.zelyder.movie.domain.models.ListMovie
 
+
+fun ActorEntity.toActor() = Actor(
+    castId = this.castId,
+    movieId = this.movieId,
+    name = this.name,
+    orderInCredits = this.orderInCredits,
+    character = this.character,
+    picture = this.picture
+)
+
+fun Actor.toActorEntity() = ActorEntity(
+    castId = this.castId,
+    movieId = this.movieId,
+    name = this.name,
+    orderInCredits = this.orderInCredits,
+    character = this.character,
+    picture = this.picture
+)
 
 fun ListMovieDto.toListMovie(
     genresDto: List<GenreDto>,
@@ -23,22 +45,92 @@ fun ListMovieDto.toListMovie(
     genres = toGenresAsString(this, genresDto)
 )
 
+fun MovieEntity.toListMovie(): ListMovie = ListMovie(
+    id = this.id,
+    title = this.title,
+    poster = this.poster,
+    ratings = this.ratings,
+    numberOfRatings = this.numberOfRatings,
+    minimumAge = this.minimumAge,
+    releaseDate = this.releaseDate,
+    genres = this.genres,
+    isFavorite = this.isFavorite
+)
+
+fun ListMovie.toMovieEntity(): MovieEntity = MovieEntity(
+    id = this.id,
+    title = this.title,
+    poster = this.poster,
+    ratings = this.ratings,
+    numberOfRatings = this.numberOfRatings,
+    minimumAge = this.minimumAge,
+    releaseDate = this.releaseDate,
+    genres = this.genres,
+    isFavorite = this.isFavorite
+)
+
+fun MovieWithActors.toDetailsMovie(): DetailsMovie = DetailsMovie(
+    id = this.movie.id,
+    title = this.movie.title,
+    overview = this.movie.overview,
+    minimumAge = this.movie.minimumAge,
+    backdrop = this.movie.backdrop,
+    ratings = this.movie.ratings,
+    numberOfRatings = this.movie.numberOfRatings,
+    runtime = this.movie.duration,
+    releaseDate = this.movie.releaseDate,
+    genres = this.movie.genres,
+    actors = this.actors.map { it.toActor() },
+    isFavorite = this.movie.isFavorite
+)
+
+fun DetailsMovie.toMovieEntity(): MovieWithActors = MovieWithActors(
+    MovieEntity(
+        id = this.id,
+        title = this.title,
+        overview = this.overview,
+        minimumAge = this.minimumAge,
+        poster = this.poster,
+        backdrop = this.backdrop,
+        ratings = this.ratings,
+        numberOfRatings = this.numberOfRatings,
+        duration = this.runtime,
+        releaseDate = this.releaseDate,
+        genres = this.genres,
+        isFavorite = this.isFavorite
+    ),
+    actors = this.actors.map { it.toActorEntity() },
+)
+
 fun DetailsMovieDto.toDetailsMovie(
-    actors: List<CastDto>,
+    actors: List<Actor>,
     imagesBaseUrl: String
 ): DetailsMovie = DetailsMovie(
     id = this.id,
     title = this.title,
     overview = this.overview,
     minimumAge = normalizedMinimumAge(this.adult),
+    poster = normalizedImgUrl(imagesBaseUrl,this.posterPicture),
     backdrop = normalizedImgUrl(imagesBaseUrl, this.backdropPicture),
     ratings = normalizedRating(this.rating),
     numberOfRatings = this.votesCount,
     runtime = this.duration,
     releaseDate = this.releaseDate,
     genres = toGenresAsString(this),
-    actors = toActorsList(actors, this.id, imagesBaseUrl)
+    actors = actors
 )
+
+
+fun GenreDto.toGenreEntity() = GenreEntity(
+    id = this.id,
+    name = this.name
+)
+
+fun GenreEntity.toGenreDto() = GenreDto(
+    id = this.id,
+    name = this.name
+)
+
 
 fun toActorsList(actorsDto: List<CastDto>, movieId: Int, imagesBaseUrl: String): List<Actor> =
     actorsDto.sortedBy { it.orderInCredits }

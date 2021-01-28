@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.zelyder.movie.data.network.MoviesNetworkModule
+import com.zelyder.movie.data.storage.db.MoviesDb
+import com.zelyder.movie.domain.datasources.MoviesLocalDataSourceImpl
 import com.zelyder.movie.domain.datasources.MoviesRemoteDataSourceImpl
 import com.zelyder.movie.domain.repositories.MovieDetailsRepository
 import com.zelyder.movie.domain.repositories.MovieDetailsRepositoryImpl
@@ -32,16 +34,24 @@ class MyApp: Application(), ViewModelFactoryProvider {
 
     @ExperimentalSerializationApi
     private fun initRepositories() {
+
+        val localDataSource = MoviesLocalDataSourceImpl(MoviesDb.create(applicationContext))
+        val remoteDateSource = MoviesRemoteDataSourceImpl(MoviesNetworkModule().moviesApi())
+
         moviesListRepository = MoviesListRepositoryImpl(
-            MoviesRemoteDataSourceImpl(MoviesNetworkModule().moviesApi()),
+            localDataSource,
+            remoteDateSource,
             BuildConfig.BASE_IMAGE_URL
         )
 
         moviesDetailsRepository = MovieDetailsRepositoryImpl(
-            MoviesRemoteDataSourceImpl(MoviesNetworkModule().moviesApi()),
+            localDataSource,
+            remoteDateSource,
             BuildConfig.BASE_IMAGE_URL
         )
     }
+
+
 }
 
 fun Context.viewModelFactoryProvider() = (applicationContext as MyApp)

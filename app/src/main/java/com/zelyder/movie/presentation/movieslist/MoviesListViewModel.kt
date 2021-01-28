@@ -27,4 +27,10 @@ class MoviesListViewModel(private val moviesListRepository: MoviesListRepository
         }
     }
 
+    fun updateMovie(movie: ListMovie){
+        viewModelScope.launch(coroutineExceptionHandler)  {
+            moviesListRepository.updateMovieAsync(movie)
+        }
+    }
+
 }

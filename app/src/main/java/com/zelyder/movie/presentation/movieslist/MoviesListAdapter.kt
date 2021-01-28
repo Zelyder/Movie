@@ -13,7 +13,10 @@ import com.zelyder.movie.R
 import com.zelyder.movie.domain.models.DetailsMovie
 import com.zelyder.movie.domain.models.ListMovie
 
-class MoviesListAdapter(private val navigationClickListener: NavigationClickListener?) :
+class MoviesListAdapter(
+    private val navigationClickListener: NavigationClickListener?,
+    private val itemClickListener: MovieListItemClickListener?
+) :
     RecyclerView.Adapter<MoviesViewHolder>() {
 
     private var movies = listOf<ListMovie>()
@@ -30,6 +33,22 @@ class MoviesListAdapter(private val navigationClickListener: NavigationClickList
         holder.bind(movie)
         holder.itemView.setOnClickListener {
             navigationClickListener?.navigateToDetails(movie.id)
+        }
+        holder.ivFavorite.setOnClickListener {
+            holder.ivFavorite.setImageResource(
+                when (movie.isFavorite) {
+                    true -> {
+                        movie.isFavorite = false
+                        itemClickListener?.onClickLike(movie)
+                        R.drawable.ic_like_empty
+                    }
+                    false -> {
+                        movie.isFavorite = true
+                        itemClickListener?.onClickLike(movie)
+                        R.drawable.ic_like_filled
+                    }
+                }
+            )
         }
 
     }
@@ -48,7 +67,7 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tvTitle: TextView = itemView.findViewById(R.id.tvItemTitle)
     private val ivCover: ImageView = itemView.findViewById(R.id.imgItemPoster)
     private val tvAgeRating: TextView = itemView.findViewById(R.id.tvItemAgeRating)
-    private val ivFavorite: ImageView = itemView.findViewById(R.id.ivItemFavorite)
+    val ivFavorite: ImageView = itemView.findViewById(R.id.ivItemFavorite)
     private val tvGenres: TextView = itemView.findViewById(R.id.tvItemGenres)
     private val ratingBar: RatingBar = itemView.findViewById(R.id.itemRatingBar)
     private val tvReviewsCount: TextView = itemView.findViewById(R.id.tvItemReviewsCount)
@@ -56,8 +75,10 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(movie: ListMovie) {
         tvTitle.text = movie.title
-        Picasso.get().load(movie.poster)
-            .into(ivCover)
+        if (movie.poster.isNotEmpty()) {
+            Picasso.get().load(movie.poster)
+                .into(ivCover)
+        }
         tvAgeRating.text = movie.minimumAge
         ivFavorite.setImageResource(
             when (movie.isFavorite) {
@@ -71,20 +92,6 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         tvReleaseDate.text = movie.releaseDate
         ratingBar.rating = movie.ratings
 
-        ivFavorite.setOnClickListener {
-            ivFavorite.setImageResource(
-                when (movie.isFavorite) {
-                    true -> {
-                        movie.isFavorite = false
-                        R.drawable.ic_like_empty
-                    }
-                    false -> {
-                        movie.isFavorite = true
-                        R.drawable.ic_like_filled
-                    }
-                }
-            )
-        }
     }
 
 }

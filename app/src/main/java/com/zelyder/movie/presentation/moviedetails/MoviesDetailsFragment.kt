@@ -75,8 +75,8 @@ class MoviesDetailsFragment : BaseFragment() {
     }
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDetach() {
+        super.onDetach()
         navigationClickListener = null
     }
 

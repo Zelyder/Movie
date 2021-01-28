@@ -34,4 +34,7 @@ data class DetailsMovieDto(
 
     @SerialName("backdrop_path")
     val backdropPicture: String = "",
+
+    @SerialName("poster_path")
+    val posterPicture: String = ""
 )

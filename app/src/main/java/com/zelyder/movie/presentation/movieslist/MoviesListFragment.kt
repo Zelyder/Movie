@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.zelyder.movie.*
+import com.zelyder.movie.domain.models.ListMovie
 import com.zelyder.movie.presentation.core.NavigationClickListener
 import com.zelyder.movie.presentation.core.BaseFragment
 
-class MoviesListFragment : BaseFragment() {
+class MoviesListFragment : BaseFragment(), MovieListItemClickListener {
 
-    var navigationClickListener: NavigationClickListener? = null
+    private var navigationClickListener: NavigationClickListener? = null
+    var itemClickListener: MovieListItemClickListener? = null
     var recyclerView: RecyclerView? = null
     var columnsCount = PORTRAIT_LIST_COLUMNS_COUNT
     private val viewModel: MoviesListViewModel by lazy { viewModelFactoryProvider()
@@ -25,6 +27,7 @@ class MoviesListFragment : BaseFragment() {
         if (context is NavigationClickListener) {
             navigationClickListener = context
         }
+        itemClickListener = this
     }
 
     override fun onCreateView(
@@ -45,7 +48,7 @@ class MoviesListFragment : BaseFragment() {
 
         recyclerView = view.findViewById<RecyclerView>(R.id.rvMoviesList).apply {
             layoutManager = GridLayoutManager(view.context, columnsCount)
-            adapter = MoviesListAdapter(navigationClickListener)
+            adapter = MoviesListAdapter(navigationClickListener, itemClickListener)
         }
 
         viewModel.moviesList.observe(this.viewLifecycleOwner, {
@@ -60,10 +63,19 @@ class MoviesListFragment : BaseFragment() {
         viewModel.updateList()
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onDestroyView() {
         recyclerView = null
+        super.onDestroyView()
+    }
+
+    override fun onDetach() {
         navigationClickListener = null
+        itemClickListener = null
+        super.onDetach()
+    }
+
+    override fun onClickLike(movie: ListMovie) {
+        viewModel.updateMovie(movie)
     }
 }
 
