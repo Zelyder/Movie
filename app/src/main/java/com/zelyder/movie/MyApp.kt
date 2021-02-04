@@ -11,6 +11,7 @@ import com.zelyder.movie.domain.repositories.MovieDetailsRepository
 import com.zelyder.movie.domain.repositories.MovieDetailsRepositoryImpl
 import com.zelyder.movie.domain.repositories.MoviesListRepository
 import com.zelyder.movie.domain.repositories.MoviesListRepositoryImpl
+import com.zelyder.movie.presentation.background.MyWorker
 import com.zelyder.movie.presentation.core.ViewModelFactory
 import com.zelyder.movie.presentation.core.ViewModelFactoryProvider
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -26,6 +27,8 @@ class MyApp: Application(), ViewModelFactoryProvider {
         super.onCreate()
 
         initRepositories()
+
+        MyWorker.startWork(applicationContext, moviesListRepository)
 
         viewModelFactory = ViewModelFactory(moviesListRepository, moviesDetailsRepository)
     }
