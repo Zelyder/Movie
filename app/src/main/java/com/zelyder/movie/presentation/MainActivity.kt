@@ -4,7 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.app.NotificationManagerCompat
 import com.zelyder.movie.R
+import com.zelyder.movie.presentation.background.MyWorker
 import com.zelyder.movie.presentation.core.NavigationClickListener
 import com.zelyder.movie.presentation.moviedetails.MoviesDetailsFragment
 import com.zelyder.movie.presentation.movieslist.MoviesListFragment
@@ -23,6 +25,7 @@ class MainActivity : AppCompatActivity(), NavigationClickListener {
                 .commit()
 
             intent?.let(::handleIntent)
+            NotificationManagerCompat.from(this).cancelAll()
         }
 
     }
@@ -39,7 +42,6 @@ class MainActivity : AppCompatActivity(), NavigationClickListener {
     }
 
     override fun navigateToDetails(id: Int) {
-        Log.d("LOL", "id = $id")
         supportFragmentManager.beginTransaction()
             .replace(R.id.main_container, MoviesDetailsFragment.newInstance(id))
             .addToBackStack("MoviesDetails")
@@ -52,6 +54,7 @@ class MainActivity : AppCompatActivity(), NavigationClickListener {
                 val id = intent.data?.lastPathSegment?.toIntOrNull()
                 if (id != null) {
                     navigateToDetails(id)
+                    NotificationManagerCompat.from(this).cancel(MyWorker.RECOMMENDATION_TAG, id)
                 }
             }
         }
