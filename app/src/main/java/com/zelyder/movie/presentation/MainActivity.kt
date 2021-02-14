@@ -3,17 +3,17 @@ package com.zelyder.movie.presentation
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.core.app.NotificationManagerCompat
 import com.zelyder.movie.R
-import com.zelyder.movie.presentation.background.MyWorker
+import com.zelyder.movie.presentation.core.AndroidNotifications
 import com.zelyder.movie.presentation.core.NavigationClickListener
+import com.zelyder.movie.presentation.core.Notifications
 import com.zelyder.movie.presentation.moviedetails.MoviesDetailsFragment
 import com.zelyder.movie.presentation.movieslist.MoviesListFragment
 
 
 class MainActivity : AppCompatActivity(), NavigationClickListener {
 
+    private val notifications: Notifications by lazy { AndroidNotifications(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), NavigationClickListener {
                 .commit()
 
             intent?.let(::handleIntent)
-            NotificationManagerCompat.from(this).cancelAll()
+            notifications.dismissAllNotifications()
         }
 
     }
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(), NavigationClickListener {
                 val id = intent.data?.lastPathSegment?.toIntOrNull()
                 if (id != null) {
                     navigateToDetails(id)
-                    NotificationManagerCompat.from(this).cancel(MyWorker.RECOMMENDATION_TAG, id)
+                    notifications.dismissNotification(id)
                 }
             }
         }
