@@ -28,4 +28,6 @@
     <string name="permission_dialog_denied_text">This feature is not available without permission to read the calendar. Open Application Settings?</string>
     <string name="dialog_positive_button">OK</string>
     <string name="dialog_negative_button">Cancel</string>
+    <string name="reminder_title">Movie reminder</string>
+    <string name="reminder_description">You wanted to see a movie - %s</string>
 </resources>
