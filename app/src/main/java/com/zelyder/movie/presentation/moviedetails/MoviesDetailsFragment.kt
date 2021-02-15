@@ -1,13 +1,23 @@
 package com.zelyder.movie.presentation.moviedetails
 
+import android.Manifest
+import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
+import android.content.pm.LauncherActivityInfo
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
@@ -21,8 +31,11 @@ import com.zelyder.movie.viewModelFactoryProvider
 class MoviesDetailsFragment : BaseFragment() {
 
     var navigationClickListener: NavigationClickListener? = null
-    private val viewModel by lazy { viewModelFactoryProvider()
-        .viewModelFactory().create(MoviesDetailsViewModel::class.java) }
+    var movieDetailsClickListener: MovieDetailsClickListener? = null
+    private val viewModel by lazy {
+        viewModelFactoryProvider()
+            .viewModelFactory().create(MoviesDetailsViewModel::class.java)
+    }
 
     private lateinit var ivBigCoverImg: ImageView
     private lateinit var tvStoryline: TextView
@@ -33,11 +46,22 @@ class MoviesDetailsFragment : BaseFragment() {
     private lateinit var ratingBar: RatingBar
     private lateinit var rvActors: RecyclerView
     private lateinit var btnBack: View
+    private lateinit var btnRemind: ImageView
+
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    private var isRationaleShown = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is NavigationClickListener) {
             navigationClickListener = context
+        }
+        requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isDetached: Boolean ->
+            if (isDetached) {
+                onCalendarPermissionGranted()
+            }
         }
     }
 
@@ -60,6 +84,7 @@ class MoviesDetailsFragment : BaseFragment() {
         ratingBar = view.findViewById(R.id.detailsRatingBar)
         rvActors = view.findViewById(R.id.rvDetailsActors)
         btnBack = view.findViewById(R.id.btnBack)
+        btnRemind = view.findViewById(R.id.btnRemind)
 
         rvActors.adapter = ActorsListAdapter()
 
@@ -78,12 +103,13 @@ class MoviesDetailsFragment : BaseFragment() {
     override fun onDetach() {
         super.onDetach()
         navigationClickListener = null
+        requestPermissionLauncher.unregister()
     }
 
 
     private fun showMovie(movie: DetailsMovie?) {
 
-        movie?.let {_movie ->
+        movie?.let { _movie ->
             if (movie.backdrop.isNotEmpty()) {
                 Picasso.get().load(movie.backdrop)
                     .into(ivBigCoverImg)
@@ -98,13 +124,70 @@ class MoviesDetailsFragment : BaseFragment() {
             btnBack.setOnClickListener {
                 navigationClickListener?.onClickBack()
             }
+            btnRemind.setOnClickListener {
+                onOpenDialogs()
+            }
             rvActors.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             rvActors.adapter = ActorsListAdapter().also {
-                    it.bindActors(_movie.actors)
+                it.bindActors(_movie.actors)
             }
         }
     }
+
+    private fun onOpenDialogs() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_CALENDAR
+            ) == PackageManager.PERMISSION_GRANTED -> onCalendarPermissionGranted()
+            shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR) ->
+                showCalendarPermissionExplanationDialog()
+            isRationaleShown -> showCalendarPermissionDeniedDialog()
+            else -> requestCalendarPermission()
+        }
+    }
+
+    private fun onCalendarPermissionGranted() {
+        Toast.makeText(context, "onCalendarPermissionGranted", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showCalendarPermissionExplanationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.permission_dialog_explanation_text)
+            .setPositiveButton(R.string.dialog_positive_button) { dialog, _ ->
+                isRationaleShown = true
+                requestCalendarPermission()
+                dialog.dismiss()
+            }
+            .setNeutralButton(R.string.dialog_negative_button) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun showCalendarPermissionDeniedDialog() {
+        AlertDialog.Builder(requireContext())
+            .setMessage(R.string.permission_dialog_denied_text)
+            .setPositiveButton(R.string.dialog_positive_button) { dialog, _ ->
+                startActivity(
+                    Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:${requireContext().packageName}")
+                    )
+                )
+                dialog.dismiss()
+            }
+            .setNeutralButton(R.string.dialog_negative_button) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun requestCalendarPermission() {
+        requestPermissionLauncher.launch(Manifest.permission.WRITE_CALENDAR)
+    }
+
 
 
     companion object {
