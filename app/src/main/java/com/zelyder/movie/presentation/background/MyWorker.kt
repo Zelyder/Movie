@@ -7,7 +7,6 @@ import com.zelyder.movie.domain.models.ListMovie
 import com.zelyder.movie.domain.repositories.MoviesListRepository
 import java.util.concurrent.TimeUnit
 import com.zelyder.movie.presentation.core.AndroidNotifications
-import com.zelyder.movie.presentation.core.Notifications
 
 class MyWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
@@ -54,9 +53,7 @@ class MyWorker(val context: Context, params: WorkerParameters) : CoroutineWorker
         private fun sendNotification(context: Context) {
             Log.d(TAG, "Movie = $mostRatedMovie")
 
-            val notifications: Notifications = AndroidNotifications(context)
-            notifications.initialize()
-            mostRatedMovie?.let { notifications.showNotification(it) }
+            mostRatedMovie?.let { AndroidNotifications().show(context, it) }
         }
     }
 }

@@ -13,7 +13,7 @@ import android.widget.TimePicker
 import com.zelyder.movie.R
 import java.util.*
 
-class Dialogs(val context: Context): DatePickerDialog.OnDateSetListener,
+class Dialogs: DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener {
 
     private var day = 0
@@ -30,7 +30,7 @@ class Dialogs(val context: Context): DatePickerDialog.OnDateSetListener,
 
     private lateinit var title: String
 
-    fun showCalendarPermissionExplanationDialog(block: () -> Unit) {
+    fun showCalendarPermissionExplanationDialog(context: Context, block: () -> Unit) {
         AlertDialog.Builder(context)
             .setMessage(R.string.permission_dialog_explanation_text)
             .setPositiveButton(R.string.dialog_positive_button) { dialog, _ ->
@@ -43,7 +43,7 @@ class Dialogs(val context: Context): DatePickerDialog.OnDateSetListener,
             .show()
     }
 
-    fun showCalendarPermissionDeniedDialog() {
+    fun showCalendarPermissionDeniedDialog(context: Context) {
         AlertDialog.Builder(context)
             .setMessage(R.string.permission_dialog_denied_text)
             .setPositiveButton(R.string.dialog_positive_button) { dialog, _ ->
@@ -61,6 +61,39 @@ class Dialogs(val context: Context): DatePickerDialog.OnDateSetListener,
             .show()
     }
 
+    fun openDateTimePicker(context: Context, movieTitle: String) {
+        getDateTimeCalendar()
+        title = movieTitle
+
+        DatePickerDialog(context, this, year, month, day).show()
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        savedDay = dayOfMonth
+        savedMonth = month
+        savedYear = year
+
+        getDateTimeCalendar()
+        TimePickerDialog(view?.context, this, hour, minute, true).show()
+    }
+
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        savedHour = hourOfDay
+        savedMinute = minute
+
+        view?.context?.let {
+            writeToCalendar(
+                it,
+                title,
+                savedYear,
+                savedMonth,
+                savedDay,
+                savedHour,
+                savedMinute
+            )
+        }
+    }
+
     private fun getDateTimeCalendar() {
         val calendar = Calendar.getInstance()
         day = calendar.get(Calendar.DAY_OF_MONTH)
@@ -70,14 +103,8 @@ class Dialogs(val context: Context): DatePickerDialog.OnDateSetListener,
         minute = calendar.get(Calendar.MINUTE)
     }
 
-    fun openDateTimePicker(movieTitle: String) {
-        getDateTimeCalendar()
-        title = movieTitle
-
-        DatePickerDialog(context, this, year, month, day).show()
-    }
-
     private fun writeToCalendar(
+        context: Context,
         movieTitle: String,
         year: Int,
         month: Int,
@@ -101,28 +128,5 @@ class Dialogs(val context: Context): DatePickerDialog.OnDateSetListener,
             .putExtra(CalendarContract.Events.TITLE, context.resources.getString(R.string.reminder_title))
             .putExtra(CalendarContract.Events.DESCRIPTION, context.resources.getString(R.string.reminder_description, movieTitle))
         context.startActivity(intent)
-    }
-
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        savedDay = dayOfMonth
-        savedMonth = month
-        savedYear = year
-
-        getDateTimeCalendar()
-        TimePickerDialog(context, this, hour, minute, true).show()
-    }
-
-    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        savedHour = hourOfDay
-        savedMinute = minute
-
-        writeToCalendar(
-            title,
-            savedYear,
-            savedMonth,
-            savedDay,
-            savedHour,
-            savedMinute
-        )
     }
 }

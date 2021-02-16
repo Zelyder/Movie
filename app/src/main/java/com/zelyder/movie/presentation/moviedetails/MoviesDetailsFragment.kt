@@ -4,10 +4,7 @@ import android.Manifest
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.ContentResolver
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -53,10 +50,14 @@ class MoviesDetailsFragment : BaseFragment() {
 
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
     private var isRationaleShown = false
-    private val dialogs by lazy { Dialogs(requireContext()) }
+    private val dialogs by lazy { Dialogs() }
+    private lateinit var prefs: SharedPreferences
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        prefs = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
+        isRationaleShown = prefs.getBoolean(PREF_KEY_RATIONAL, false)
+
         if (context is NavigationClickListener) {
             navigationClickListener = context
         }
@@ -146,11 +147,15 @@ class MoviesDetailsFragment : BaseFragment() {
                 Manifest.permission.WRITE_CALENDAR
             ) == PackageManager.PERMISSION_GRANTED -> onCalendarPermissionGranted()
             shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALENDAR) ->
-                dialogs.showCalendarPermissionExplanationDialog {
+                dialogs.showCalendarPermissionExplanationDialog(requireContext()) {
                     isRationaleShown = true
+                    prefs.edit().apply{
+                        putBoolean(PREF_KEY_RATIONAL, isRationaleShown)
+                        apply()
+                    }
                     requestCalendarPermission()
                 }
-            isRationaleShown -> dialogs.showCalendarPermissionDeniedDialog()
+            isRationaleShown -> dialogs.showCalendarPermissionDeniedDialog(requireContext())
             else -> requestCalendarPermission()
         }
     }
@@ -161,7 +166,7 @@ class MoviesDetailsFragment : BaseFragment() {
 
 
     private fun onCalendarPermissionGranted() {
-        dialogs.openDateTimePicker(tvTitle.text.toString())
+        dialogs.openDateTimePicker(requireContext(), tvTitle.text.toString())
     }
 
     companion object {
@@ -177,3 +182,5 @@ class MoviesDetailsFragment : BaseFragment() {
 }
 
 const val KEY_MOVIE_ID = "movie_id"
+const val SHARED_PREF_NAME = "MOVIES_SHARED_PREF"
+const val PREF_KEY_RATIONAL = "KEY_RATIONAL"

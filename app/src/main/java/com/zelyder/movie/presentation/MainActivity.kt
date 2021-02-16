@@ -13,11 +13,13 @@ import com.zelyder.movie.presentation.movieslist.MoviesListFragment
 
 class MainActivity : AppCompatActivity(), NavigationClickListener {
 
-    private val notifications: Notifications by lazy { AndroidNotifications(this) }
+    private val notifications: Notifications by lazy { AndroidNotifications() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        notifications.initialize(this)
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -25,7 +27,7 @@ class MainActivity : AppCompatActivity(), NavigationClickListener {
                 .commit()
 
             intent?.let(::handleIntent)
-            notifications.dismissAllNotifications()
+            notifications.dismissAll()
         }
 
     }
@@ -54,7 +56,7 @@ class MainActivity : AppCompatActivity(), NavigationClickListener {
                 val id = intent.data?.lastPathSegment?.toIntOrNull()
                 if (id != null) {
                     navigateToDetails(id)
-                    notifications.dismissNotification(id)
+                    notifications.dismiss(id)
                 }
             }
         }

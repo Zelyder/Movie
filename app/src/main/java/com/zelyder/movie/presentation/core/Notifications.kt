@@ -17,13 +17,13 @@ import com.zelyder.movie.presentation.MainActivity
 
 
 interface Notifications {
-    fun initialize()
-    fun showNotification(movie: ListMovie)
-    fun dismissNotification(movieId: Int)
-    fun dismissAllNotifications()
+    fun initialize(context: Context)
+    fun show(context: Context, movie: ListMovie)
+    fun dismiss(movieId: Int)
+    fun dismissAll()
 }
 
-class AndroidNotifications(val context: Context) : Notifications {
+class AndroidNotifications : Notifications {
 
     companion object {
         private const val CHANNEL_RECOMMENDATION = "recommendationChannel"
@@ -31,11 +31,11 @@ class AndroidNotifications(val context: Context) : Notifications {
         private const val REQUEST_CODE = 1
     }
 
-    private val notificationManager: NotificationManagerCompat =
-        NotificationManagerCompat.from(context)
+    private lateinit var notificationManager: NotificationManagerCompat
 
-    override fun initialize() {
-        if(notificationManager.getNotificationChannel(CHANNEL_RECOMMENDATION) == null) {
+    override fun initialize(context: Context) {
+        notificationManager = NotificationManagerCompat.from(context)
+        if (notificationManager.getNotificationChannel(CHANNEL_RECOMMENDATION) == null) {
             val notificationChannel = NotificationChannelCompat.Builder(
                 CHANNEL_RECOMMENDATION,
                 NotificationManagerCompat.IMPORTANCE_HIGH
@@ -48,9 +48,22 @@ class AndroidNotifications(val context: Context) : Notifications {
         }
     }
 
-    override fun showNotification(movie: ListMovie) {
+    override fun show(context: Context, movie: ListMovie) {
+        initialize(context)
+        showNotification(context, movie)
+    }
+
+    override fun dismiss(movieId: Int) {
+        notificationManager.cancel(RECOMMENDATION_TAG, movieId)
+    }
+
+    override fun dismissAll() {
+        notificationManager.cancelAll()
+    }
+
+    private fun showNotification(context: Context, movie: ListMovie) {
         val contentUri = "com.zelyder.movie://movie/${movie.id}".toUri()
-        val poster = Picasso.get().load(movie.poster).resize(100,100).get()
+        val poster = Picasso.get().load(movie.poster).resize(100, 100).get()
 
         val notification = NotificationCompat.Builder(context, CHANNEL_RECOMMENDATION)
             .setContentTitle(movie.title)
@@ -74,13 +87,5 @@ class AndroidNotifications(val context: Context) : Notifications {
             movie.id,
             notification
         )
-    }
-
-    override fun dismissNotification(movieId: Int) {
-        NotificationManagerCompat.from(context).cancel(RECOMMENDATION_TAG, movieId)
-    }
-
-    override fun dismissAllNotifications() {
-        NotificationManagerCompat.from(context).cancelAll()
     }
 }
