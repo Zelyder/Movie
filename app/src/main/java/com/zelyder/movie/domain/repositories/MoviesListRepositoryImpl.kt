@@ -16,6 +16,8 @@ class MoviesListRepositoryImpl(
     private val imagesBaseUrl: String
 ) : MoviesListRepository {
 
+    private var mostRatedMovie: ListMovie? = null
+
     override suspend fun getMoviesAsync(forceRefresh: Boolean): List<ListMovie> =
         withContext(Dispatchers.IO) {
 
@@ -26,20 +28,34 @@ class MoviesListRepositoryImpl(
             }
 
             var movies = localDataSource.getMoviesAsync().map { it.toListMovie() }
-            if(forceRefresh || movies.isEmpty()){
+            val localMovies = movies
+            if (forceRefresh || movies.isEmpty()) {
                 movies = remoteDataSource.getMoviesAsync().popularMovies.map {
                     it.toListMovie(
                         cachedGenres.map { genre -> genre.toGenreDto() },
                         imagesBaseUrl
                     )
                 }
+
+                val remoteMovies = movies
+                val newMovies =
+                    remoteMovies.filter { newMovie -> localMovies.none { it.id == newMovie.id } }
+                mostRatedMovie = newMovies.maxByOrNull { it.ratings }
+
                 localDataSource.saveMovies(movies.map { it.toMovieEntity() })
             }
 
             movies
         }
 
-    override suspend fun updateMovieIsFavoriteAsync(movieId: Int, isFavorite: Boolean) = withContext(Dispatchers.IO){
-        localDataSource.updateMovieIsFavorite(movieId, isFavorite)
-    }
+    override suspend fun updateMovieIsFavoriteAsync(movieId: Int, isFavorite: Boolean) =
+        withContext(Dispatchers.IO) {
+            localDataSource.updateMovieIsFavorite(movieId, isFavorite)
+        }
+
+    override suspend fun updateAndGetHighestRatedNewMovieAsync(): ListMovie? =
+        withContext(Dispatchers.Default) {
+            getMoviesAsync(true)
+            mostRatedMovie
+        }
 }

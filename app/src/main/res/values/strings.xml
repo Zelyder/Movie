@@ -21,4 +21,13 @@
     <string name="reviews_count_template">%d Reviews</string>
     <string name="minimumAge_template">%d+</string>
     <string name="duration_template">%d MIN</string>
+    <string name="notification_text">New films have appeared. You will love it!</string>
+    <string name="recommendation_channel_name">Recommendation channel</string>
+    <string name="recommendation_channel_description">Shows New Top Rated Movies</string>
+    <string name="permission_dialog_explanation_text">Calendar write permission is required to add a movie reminder to your calendar</string>
+    <string name="permission_dialog_denied_text">This feature is not available without permission to read the calendar. Open Application Settings?</string>
+    <string name="dialog_positive_button">OK</string>
+    <string name="dialog_negative_button">Cancel</string>
+    <string name="reminder_title">Movie reminder</string>
+    <string name="reminder_description">You wanted to see a movie - %s</string>
 </resources>
