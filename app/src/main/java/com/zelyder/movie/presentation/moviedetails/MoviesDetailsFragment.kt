@@ -95,9 +95,6 @@ class MoviesDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
-
         ivBigCoverImg = view.findViewById(R.id.imageDetailsPoster)
         tvStoryline = view.findViewById(R.id.tvDetailsStorylineContent)
         tvGenres = view.findViewById(R.id.tvDetailsGenres)
