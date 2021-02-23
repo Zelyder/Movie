@@ -6,10 +6,12 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.CalendarContract
 import android.provider.Settings
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +19,10 @@ import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.transition.MaterialContainerTransform
 import com.squareup.picasso.Picasso
 import com.zelyder.movie.R
 import com.zelyder.movie.domain.models.DetailsMovie
@@ -70,6 +74,17 @@ class MoviesDetailsFragment : BaseFragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.main_container
+            duration = NAV_LIST_TO_DETAILS_DURATION
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(ContextCompat.getColor(requireContext(), R.color.dark_purple_blue))
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,6 +94,9 @@ class MoviesDetailsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         ivBigCoverImg = view.findViewById(R.id.imageDetailsPoster)
         tvStoryline = view.findViewById(R.id.tvDetailsStorylineContent)
@@ -184,3 +202,4 @@ class MoviesDetailsFragment : BaseFragment() {
 const val KEY_MOVIE_ID = "movie_id"
 const val SHARED_PREF_NAME = "MOVIES_SHARED_PREF"
 const val PREF_KEY_RATIONAL = "KEY_RATIONAL"
+const val NAV_LIST_TO_DETAILS_DURATION = 1000L

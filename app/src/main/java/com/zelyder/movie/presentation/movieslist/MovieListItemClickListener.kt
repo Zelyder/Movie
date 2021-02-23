@@ -4,4 +4,5 @@ import com.zelyder.movie.domain.models.ListMovie
 
 interface MovieListItemClickListener {
     fun onClickLike(movieId: Int, isFavorite: Boolean)
+    fun onClickItem()
 }
