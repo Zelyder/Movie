@@ -30,4 +30,5 @@
     <string name="dialog_negative_button">Cancel</string>
     <string name="reminder_title">Movie reminder</string>
     <string name="reminder_description">You wanted to see a movie - %s</string>
+    <string name="movie_detail_transition_name">movie_detail_transition_name</string>
 </resources>

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.zelyder.movie.presentation.core.NavigationClickListener
@@ -32,7 +33,8 @@ class MoviesListAdapter(
         val movie = movies[position]
         holder.bind(movie)
         holder.itemView.setOnClickListener {
-            navigationClickListener?.navigateToDetails(movie.id)
+            navigationClickListener?.navigateToDetails(movie.id, holder.itemView)
+            itemClickListener?.onClickItem()
         }
         holder.ivFavorite.setOnClickListener {
             holder.ivFavorite.setImageResource(
@@ -64,6 +66,7 @@ class MoviesListAdapter(
 
 class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+    private val cardView: CardView = itemView.findViewById(R.id.cvMovieItem)
     private val tvTitle: TextView = itemView.findViewById(R.id.tvItemTitle)
     private val ivCover: ImageView = itemView.findViewById(R.id.imgItemPoster)
     private val tvAgeRating: TextView = itemView.findViewById(R.id.tvItemAgeRating)
@@ -73,8 +76,10 @@ class MoviesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tvReviewsCount: TextView = itemView.findViewById(R.id.tvItemReviewsCount)
     private val tvReleaseDate: TextView = itemView.findViewById(R.id.tvItemReleaseDate)
 
+
     fun bind(movie: ListMovie) {
         tvTitle.text = movie.title
+        cardView.transitionName =  "cardView_${tvTitle.text}"
         if (movie.poster.isNotEmpty()) {
             Picasso.get().load(movie.poster)
                 .into(ivCover)

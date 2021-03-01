@@ -5,10 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/dark_purple_blue"
     tools:context=".presentation.moviedetails.MoviesDetailsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:transitionName="@string/movie_detail_transition_name"
         android:layout_height="wrap_content">
 
         <RatingBar

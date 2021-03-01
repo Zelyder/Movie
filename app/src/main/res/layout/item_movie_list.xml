@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cvMovieItem"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="12dp"
@@ -21,7 +23,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/avengers_card_poster" />
+            app:srcCompat="@drawable/avengers_card_poster"
+            tools:ignore="ContentDescription" />
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -56,7 +59,8 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_like_empty" />
+            app:srcCompat="@drawable/ic_like_empty"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tvItemGenres"

@@ -3,15 +3,20 @@ package com.zelyder.movie.presentation.movieslist
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialFadeThrough
 import com.zelyder.movie.*
 import com.zelyder.movie.domain.models.ListMovie
 import com.zelyder.movie.presentation.core.NavigationClickListener
 import com.zelyder.movie.presentation.core.BaseFragment
+import com.zelyder.movie.presentation.moviedetails.NAV_LIST_TO_DETAILS_DURATION
 
 class MoviesListFragment : BaseFragment(), MovieListItemClickListener {
 
@@ -30,6 +35,13 @@ class MoviesListFragment : BaseFragment(), MovieListItemClickListener {
         itemClickListener = this
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enterTransition = MaterialFadeThrough().apply {
+            duration = NAV_LIST_TO_DETAILS_DURATION
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,6 +51,9 @@ class MoviesListFragment : BaseFragment(), MovieListItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         columnsCount = when (resources.configuration.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> LANDSCAPE_LIST_COLUMNS_COUNT
@@ -76,6 +91,15 @@ class MoviesListFragment : BaseFragment(), MovieListItemClickListener {
 
     override fun onClickLike(movieId: Int, isFavorite: Boolean) {
         viewModel.updateMovie(movieId, isFavorite)
+    }
+
+    override fun onClickItem() {
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = NAV_LIST_TO_DETAILS_DURATION
+        }
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = NAV_LIST_TO_DETAILS_DURATION
+        }
     }
 }
 
